@@ -6,7 +6,7 @@ class Author(db.Model):
     title = db.Column(db.String(40), nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    test1 = db.Column(db.String(100), nullable=False)
+    test2 = db.Column(db.String(100), nullable=False)
     publications = db.relationship('Publication', secondary='author_publication', overlaps='authors', lazy=True)
 
     def __init__(self, title, first_name, last_name):
