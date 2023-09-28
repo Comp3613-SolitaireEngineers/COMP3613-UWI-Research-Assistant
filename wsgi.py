@@ -67,3 +67,19 @@ def user_tests_command(type):
     
 
 app.cli.add_command(test)
+
+publication_cli = AppGroup('publication', help='publication object commands') 
+
+@publication_cli.command('create', help='List all authors')
+def create_publication_command():
+    title = click.prompt("Enter title ", type = str)
+    author_id = click.prompt("Enter author id ", type = str)
+    publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
+    publication = create_publication(title, publication_date, author_id)
+    
+    if publication:
+        print(f"Publication: - {publication}")
+    else:
+        print("Publocation not created.")
+
+app.cli.add_command(publication_cli) # add the group to the cli
