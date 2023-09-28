@@ -1,5 +1,4 @@
 from App.database import db
-from datetime import datetime
 
 class Publication(db.Model):
     __tablename__ = "publication"
