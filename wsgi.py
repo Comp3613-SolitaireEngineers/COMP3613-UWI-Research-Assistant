@@ -4,7 +4,8 @@ from flask.cli import with_appcontext, AppGroup
 
 from App.database import db, get_migrate
 from App.main import create_app
-from App.controllers import ( create_user, get_all_users_json, get_all_users )
+from App.controllers import *
+from datetime import datetime
 
 # This commands file allow you to create convenient CLI commands for testing controllers
 
@@ -16,7 +17,7 @@ migrate = get_migrate(app)
 def initialize():
     db.drop_all()
     db.create_all()
-    create_user('bob', 'bobpass')
+    # create_user('bob', 'bobpass')
     print('database intialized')
 
 '''
@@ -68,7 +69,10 @@ def user_tests_command(type):
 
 app.cli.add_command(test)
 
-publication_cli = AppGroup('publication', help='publication object commands') 
+'''
+Publcations Commands
+'''
+publication_cli = AppGroup('publication', help='publication object commands')
 
 @publication_cli.command('create', help='List all authors')
 def create_publication_command():
@@ -81,5 +85,16 @@ def create_publication_command():
         print(f"Publication: - {publication}")
     else:
         print("Publocation not created.")
+        
+@publication_cli.command('author_publications', help="List all author's publications")
+def list_publications_by_author_command():
+    author_id = click.prompt("Enter author ID ", type = str)
+    publications = get_publications_by_author(author_id)
+    if publications:
+        print("Publications:")       
+        print(f"- {publications})")
+    else:
+        print("No publications found.")    
 
-app.cli.add_command(publication_cli) # add the group to the cli
+app.cli.add_command(publication_cli) 
+

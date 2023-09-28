@@ -1,5 +1,4 @@
 from App.database import db
-# from datetime import datetime
 
 class Publication(db.Model):
     __tablename__ = "publication"
@@ -7,9 +6,9 @@ class Publication(db.Model):
     title = db.Column(db.String(50), nullable=False)
     publication_date = db.Column(db.DateTime, default=None)
     authors = db.relationship('Author', secondary='author_publication', overlaps='publications', lazy=True)
-  
-    def __init__(self, title, publication_date):
-        # self.publication_id = publication_id
+
+    def __init__(self, title, publication_date):       
+
         self.title = title
         self.publication_date = publication_date
 
