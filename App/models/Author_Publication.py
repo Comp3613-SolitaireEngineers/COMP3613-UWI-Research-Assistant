@@ -3,7 +3,7 @@ from App.database import db
 class AuthorPublication(db.Model):
     __tablename__ = 'author_publication'
     authorpublication_id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('Author.author_id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     publication_id = db.Column(db.Integer, db.ForeignKey('Publication.publication_id')) 
 
     def __init__(self,author_id, publication_id):
