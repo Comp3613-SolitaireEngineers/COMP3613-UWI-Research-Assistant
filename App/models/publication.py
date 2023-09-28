@@ -8,8 +8,7 @@ class Publication(db.Model):
     publication_date = db.Column(db.DateTime, default=None)
     authors = db.relationship('Author', secondary='author_publication', overlaps='publications', lazy=True)
   
-    def __init__(self, publication_id, title, publication_date):
-        self.publication_id = publication_id
+    def __init__(self, title, publication_date):
         self.title = title
         self.publication_date = publication_date
 
