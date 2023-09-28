@@ -69,12 +69,23 @@ def user_tests_command(type):
 
 app.cli.add_command(test)
 
-
 '''
 Publcations Commands
 '''
 publication_cli = AppGroup('publication', help='publication object commands')
 
+@publication_cli.command('create', help='List all authors')
+def create_publication_command():
+    title = click.prompt("Enter title ", type = str)
+    author_id = click.prompt("Enter author id ", type = str)
+    publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
+    publication = create_publication(title, publication_date, author_id)
+    
+    if publication:
+        print(f"Publication: - {publication}")
+    else:
+        print("Publocation not created.")
+        
 @publication_cli.command('author_publications', help="List all author's publications")
 def list_publications_by_author_command():
     author_id = click.prompt("Enter author ID ", type = str)
@@ -86,3 +97,4 @@ def list_publications_by_author_command():
         print("No publications found.")    
 
 app.cli.add_command(publication_cli) 
+
