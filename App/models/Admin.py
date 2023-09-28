@@ -1,5 +1,6 @@
 from App.database import db
 from .User import User
+from .Author import Author
 
 class Admin(User):
     __tablename__ = 'admin'
@@ -17,7 +18,21 @@ class Admin(User):
             'role' : 'admin'
         }
 
-    def create_author(title, first_name, last_name):
-        pass
+    def create_author(uwi_id, title, first_name, last_name, password):
+        try:
+            newAuthor = Author(
+                uwi_id = uwi_id,
+                title = title,
+                first_name = first_name,
+                last_name = last_name,
+                password = password                
+            )
+            db.session.add(newAuthor)
+            db.session.commit()
+            return newAuthor       
+        except Exception as e:
+            print('Error creating Author: ', e)
+            db.session.rollback()
+            return None
 
     
