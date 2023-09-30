@@ -1,10 +1,11 @@
 from App.models import Admin
+from App.controllers import is_user_available
 from App.database import db
 
 def create_admin(admin_id, username, password):
-    # if not is_user_available(username):
-    #     return None
-      
+    if not is_user_available(username):
+        return None
+
     try:   
         admin = Admin(admin_id = admin_id, username=username, password=password)
         db.session.add(admin)
@@ -12,7 +13,7 @@ def create_admin(admin_id, username, password):
         return admin
     except Exception as e:        
         print('Error in create admin') 
-        print(e)           
+        # print(e)           
         db.session.rollback()
         return None 
 

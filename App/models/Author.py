@@ -17,7 +17,7 @@ class Author(User):
         self.last_name = last_name
 
     def __repr__(self):       
-        return f"<Author {self.author_id}, {self.uwi_id}, {self.title}, {self.first_name}, {self.last_name}>"
+        return f"<Author {self.uwi_id}, {self.title}, {self.first_name}, {self.last_name}>"
 
     def toJSON(self):
         return {

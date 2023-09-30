@@ -1,4 +1,4 @@
-from App.models import Publication, AuthorPublication
+from App.models import Publication, AuthorPublication, Author, Admin
 from App.database import db
 
 # this one for author controller

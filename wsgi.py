@@ -40,43 +40,60 @@ def create_user_command(username, password):
 
 # this command will be : flask user create bob bobpass
 
-@user_cli.command("list", help="Lists users in the database")
-@click.argument("format", default="string")
-def list_user_command(format):
-    if format == 'string':
-        print(get_all_users())
-    else:
-        print(get_all_users_json())
-
-app.cli.add_command(user_cli) # add the group to the cli
-
 
 '''
 Admin Commands
 '''
 
-user_cli = AppGroup('admin', help='Admin object commands') 
+admin_cli = AppGroup('admin', help='Admin object commands') 
 
 # Then define the command and any parameters and annotate it with the group (@)
-@user_cli.command("create", help="Creates an admin")
+@admin_cli.command("create", help="Creates an admin")
 @click.argument("admin_id", default="strid")
 @click.argument("username", default="bob")
 @click.argument("password", default="bobpass")
 def create_admin_command(admin_id, username, password):
-    create_admin(admin_id, username, password)
-    print(f'{username} created!')
-
-# this command will be : flask user create bob bobpass
-
-@user_cli.command("list", help="Lists users in the database")
-@click.argument("format", default="string")
-def list_user_command(format):
-    if format == 'string':
-        print(get_all_users())
+    admin = create_admin(admin_id, username, password)
+    if admin:
+        print(f'{username} created!')
     else:
-        print(get_all_users_json())
+        print(f'{username} not created')
 
-app.cli.add_command(user_cli) # add the group to the cli
+@admin_cli.command("list", help="Lists admins in the database")
+def list_admin_command():
+    admins = get_all_admins_json()
+    print(admins)
+
+app.cli.add_command(admin_cli) # add the group to the cli
+
+'''
+Author Commands
+'''
+
+author_cli = AppGroup('author', help='Author object commands') 
+
+# Then define the command and any parameters and annotate it with the group (@)
+@author_cli.command("create", help="Creates an author")
+@click.argument("uwi_id", default="struwiid")
+@click.argument("title", default="Miss")
+@click.argument("first_name", default="sally")
+@click.argument("last_name", default="may")
+@click.argument("password", default="sallypass")
+@click.argument("admin_id", default="strid")
+def create_author_command(admin_id, uwi_id, title, first_name, last_name, password):
+    author = create_author(admin_id, uwi_id, title, first_name, last_name, password )
+    
+    if author:
+        print(f'{author} created!')
+    else:
+        print(f'Author not created')
+
+@admin_cli.command("list", help="Lists admins in the database")
+def list_user_command():
+    admins = get_all_admins_json()
+    print(admins)
+
+app.cli.add_command(author_cli) # add the group to the cli
 
 '''
 Test Commands

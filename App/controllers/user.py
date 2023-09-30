@@ -1,4 +1,4 @@
-from App.models import RegularUser
+from App.models import RegularUser, Admin
 from App.database import db
 
 def create_user(username, password):
@@ -30,4 +30,18 @@ def update_user(id, username):
         db.session.add(user)
         return db.session.commit()
     return None
+
+def is_user_available(username):
+    # Query the database for a RegularUser or an Admin object with the given username
+    query = db.session.query(
+        db.or_(
+            RegularUser.query.filter(RegularUser.username == username).exists(),
+            Admin.query.filter(Admin.username == username).exists(),
+        )
+    )
+
+    # Return True if the query does not match any record
+    return not query.scalar()
+
+
     

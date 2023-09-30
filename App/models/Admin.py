@@ -18,7 +18,7 @@ class Admin(User):
             'role' : 'admin'
         }
 
-    def create_author(uwi_id, title, first_name, last_name, password):
+    def create_author(self, uwi_id, title, first_name, last_name, password):
         try:
             newAuthor = Author(
                 uwi_id = uwi_id,
@@ -31,7 +31,7 @@ class Admin(User):
             db.session.commit()
             return newAuthor       
         except Exception as e:
-            print('Error creating Author: ', e)
+            # print('Error creating Author: ', e)
             db.session.rollback()
             return None
 

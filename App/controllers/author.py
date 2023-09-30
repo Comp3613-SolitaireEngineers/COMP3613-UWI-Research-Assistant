@@ -24,8 +24,8 @@ def get_publications_by_author(author_id):
     return [author_info]
   
 def create_author(admin_id, uwi_id, title, first_name, last_name, password):
-    admin = Admin.query.get(admin_id)
-    
+    admin = Admin.query.filter_by(admin_id = admin_id).first()
+    print(admin)
     if admin:
         return admin.create_author(uwi_id, title, first_name, last_name, password)
     return None
