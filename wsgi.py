@@ -84,14 +84,14 @@ def create_author_command(admin_id, uwi_id, title, first_name, last_name, passwo
     author = create_author(admin_id, uwi_id, title, first_name, last_name, password )
     
     if author:
-        print(f'{author} created!')
+        print(f'{author.first_name} created!')
     else:
         print(f'Author not created')
 
-@admin_cli.command("list", help="Lists admins in the database")
-def list_user_command():
-    admins = get_all_admins_json()
-    print(admins)
+@author_cli.command("list", help="Lists authorss in the database")
+def list_authors_command():
+    authors = get_all_authors_json()
+    print(authors)
 
 app.cli.add_command(author_cli) # add the group to the cli
 
@@ -119,17 +119,22 @@ Publcations Commands
 '''
 publication_cli = AppGroup('publication', help='publication object commands')
 
-@publication_cli.command('create', help='List all authors')
+@publication_cli.command('create', help='Create a publication')
 def create_publication_command():
     title = click.prompt("Enter title ", type = str)
     author_id = click.prompt("Enter author id ", type = str)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
-    publication = create_publication(title, publication_date, author_id)
-    
+    publication = create_publication("strid", title, publication_date, author_id)
+  
     if publication:
         print(f"Publication: - {publication}")
     else:
-        print("Publocation not created.")
+        print("Publication not created.")
+        
+@publication_cli.command("list", help="Lists publications in the database")
+def list_publicationss_command():
+    publications = Publication.query.all()
+    print(publications)
         
 @publication_cli.command('author_publications', help="List all author's publications")
 def list_publications_by_author_command():

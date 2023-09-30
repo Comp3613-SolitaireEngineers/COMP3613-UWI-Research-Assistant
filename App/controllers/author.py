@@ -30,3 +30,9 @@ def create_author(admin_id, uwi_id, title, first_name, last_name, password):
         return admin.create_author(uwi_id, title, first_name, last_name, password)
     return None
 
+def get_all_authors_json():
+    authors = Author.query.all()
+    if not authors:
+        return []
+    authors = [author.get_json() for author in authors]
+    return authors
