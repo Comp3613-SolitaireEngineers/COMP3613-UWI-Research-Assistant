@@ -50,6 +50,34 @@ def list_user_command(format):
 
 app.cli.add_command(user_cli) # add the group to the cli
 
+
+'''
+Admin Commands
+'''
+
+user_cli = AppGroup('admin', help='Admin object commands') 
+
+# Then define the command and any parameters and annotate it with the group (@)
+@user_cli.command("create", help="Creates an admin")
+@click.argument("admin_id", default="strid")
+@click.argument("username", default="bob")
+@click.argument("password", default="bobpass")
+def create_admin_command(admin_id, username, password):
+    create_admin(admin_id, username, password)
+    print(f'{username} created!')
+
+# this command will be : flask user create bob bobpass
+
+@user_cli.command("list", help="Lists users in the database")
+@click.argument("format", default="string")
+def list_user_command(format):
+    if format == 'string':
+        print(get_all_users())
+    else:
+        print(get_all_users_json())
+
+app.cli.add_command(user_cli) # add the group to the cli
+
 '''
 Test Commands
 '''
