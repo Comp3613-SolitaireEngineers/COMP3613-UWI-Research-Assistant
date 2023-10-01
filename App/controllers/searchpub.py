@@ -16,7 +16,5 @@ def search_publications(self,search_term):
           ).all()
   
     else:
-        publication_results = publication.query.all()
-        author_results = Author.query.all()
+        return "Error: No search term inserted",None
       
-    return publication_results, author_results
