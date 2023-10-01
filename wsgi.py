@@ -155,4 +155,3 @@ def list_publications_by_author_command():
 #     print(publication_results, author_results)
 
 # app.cli.add_command(publication_cli) 
-
