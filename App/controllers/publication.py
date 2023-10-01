@@ -1,36 +1,34 @@
-from App.models import Publication, AuthorPublication
+from App.models import Publication, AuthorPublication, Author, Admin
 from App.database import db
+from sqlalchemy import or_
+
 
 # this one for author controller
 def get_author(author_id):
     return Author.query.get(author_id)
 
-def create_publication(title, publication_date, author_ids):
-    new_publication = Publication(title=title, publication_date=publication_date)
+def create_publication(admin_id, title, publication_date, author_ids):
+    admin = Admin.query.filter_by(admin_id = admin_id).first()
 
-    try:
-        db.session.add(new_publication)
-        db.session.commit() # https://stackoverflow.com/questions/19388555/sqlalchemy-session-add-return-value
+    if admin:
+        return admin.create_publication(title, publication_date, author_ids)
+    return None
 
-        print(new_publication.id)
-        author_pub = create_author_publication(author_ids=author_ids, publication_id=new_publication.id)
+def search_publications(search_term):
+    publication_results = None
+    author_results = None
 
-        return new_publication
-        
-    except:
-        return None
+    if search_term!="":
+          publication_results = Publication.query.filter(
+                or_(Publication.title.ilike(f'%{search_term}%'), Publication.publication_date.ilike(f'%{search_term}%'))
+          ).all()
 
+          author_results = Author.query.filter(
+               or_(Author.first_name.ilike(f'%{search_term}%'), Author.last_name.ilike(f'%{search_term}%'))
+          ).all()
 
-def create_author_publication(author_ids, publication_id):
-    
-    try:
-        for author_id in author_ids:
-            author = get_author(author_id)
-            new_author_pub = AuthorPublication(author_id=author.id, publication_id=publication_id)
-            db.session.add(new_author_pub)
+    else:
+        publication_results = Publication.query.all()
+        author_results = Author.query.all()
 
-        db.session.commit()
-
-        return new_author_pub
-    except:
-        return None
+    return publication_results, author_results

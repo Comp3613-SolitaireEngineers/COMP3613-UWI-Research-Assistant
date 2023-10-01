@@ -40,15 +40,60 @@ def create_user_command(username, password):
 
 # this command will be : flask user create bob bobpass
 
-@user_cli.command("list", help="Lists users in the database")
-@click.argument("format", default="string")
-def list_user_command(format):
-    if format == 'string':
-        print(get_all_users())
-    else:
-        print(get_all_users_json())
 
-app.cli.add_command(user_cli) # add the group to the cli
+'''
+Admin Commands
+'''
+
+admin_cli = AppGroup('admin', help='Admin object commands') 
+
+# Then define the command and any parameters and annotate it with the group (@)
+@admin_cli.command("create", help="Creates an admin")
+@click.argument("admin_id", default="strid")
+@click.argument("username", default="bob")
+@click.argument("password", default="bobpass")
+def create_admin_command(admin_id, username, password):
+    admin = create_admin(admin_id, username, password)
+    if admin:
+        print(f'{username} created!')
+    else:
+        print(f'{username} not created')
+
+@admin_cli.command("list", help="Lists admins in the database")
+def list_admin_command():
+    admins = get_all_admins_json()
+    print(admins)
+
+app.cli.add_command(admin_cli) # add the group to the cli
+
+'''
+Author Commands
+'''
+
+author_cli = AppGroup('author', help='Author object commands') 
+
+# Then define the command and any parameters and annotate it with the group (@)
+@author_cli.command("create", help="Creates an author")
+@click.argument("uwi_id", default="struwiid")
+@click.argument("title", default="Miss")
+@click.argument("first_name", default="sally")
+@click.argument("last_name", default="may")
+@click.argument("password", default="sallypass")
+@click.argument("admin_id", default="strid")
+def create_author_command(admin_id, uwi_id, title, first_name, last_name, password):
+    author = create_author(admin_id, uwi_id, title, first_name, last_name, password )
+    
+    if author:
+        print(f'{author.first_name} created!')
+    else:
+        print(f'Author not created')
+
+@author_cli.command("list", help="Lists authorss in the database")
+def list_authors_command():
+    authors = get_all_authors_json()
+    print(authors)
+
+app.cli.add_command(author_cli) # add the group to the cli
 
 '''
 Test Commands
@@ -74,17 +119,24 @@ Publcations Commands
 '''
 publication_cli = AppGroup('publication', help='publication object commands')
 
-@publication_cli.command('create', help='List all authors')
+@publication_cli.command('create', help='Create a publication')
 def create_publication_command():
     title = click.prompt("Enter title ", type = str)
     author_id = click.prompt("Enter author id ", type = str)
+    author_ids = []
+    author_ids.append(author_id)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
-    publication = create_publication(title, publication_date, author_id)
-    
+    publication = create_publication("strid", title, publication_date, author_ids)
+  
     if publication:
         print(f"Publication: - {publication}")
     else:
-        print("Publocation not created.")
+        print("Publication not created.")
+        
+@publication_cli.command("list", help="Lists publications in the database")
+def list_publicationss_command():
+    publications = Publication.query.all()
+    print(publications)
         
 @publication_cli.command('author_publications', help="List all author's publications")
 def list_publications_by_author_command():
@@ -95,6 +147,11 @@ def list_publications_by_author_command():
         print(f"- {publications})")
     else:
         print("No publications found.")    
+        
+@publication_cli.command('search', help="search for a publication")
+def search_publications_command():
+    search_term = click.prompt("Enter publication search term ", type = str)
+    publication_results, author_results = search_publications(search_term)
+    print(publication_results, author_results)
 
 app.cli.add_command(publication_cli) 
-
