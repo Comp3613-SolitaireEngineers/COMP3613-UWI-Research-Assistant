@@ -2,7 +2,7 @@ from App.models import Admin, RegularUser, Author
 from App.database import db
 
 def get_author(author_id):
-    return Author.query.get(author_id)
+    return Author.query.filter_by(uwi_id = author_id).first()
 
 def get_publications_by_author(author_id):
     author = get_author(author_id)
@@ -11,7 +11,7 @@ def get_publications_by_author(author_id):
         return None
 
     author_info = {
-        'author_id': author.author_id,
+        'author_id': author.uwi_id,
         'Name': f"{author.title} {author.first_name} {author.last_name}",
     }
 

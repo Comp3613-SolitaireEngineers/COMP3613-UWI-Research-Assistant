@@ -123,8 +123,10 @@ publication_cli = AppGroup('publication', help='publication object commands')
 def create_publication_command():
     title = click.prompt("Enter title ", type = str)
     author_id = click.prompt("Enter author id ", type = str)
+    author_ids = []
+    author_ids.append(author_id)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
-    publication = create_publication("strid", title, publication_date, author_id)
+    publication = create_publication("strid", title, publication_date, author_ids)
   
     if publication:
         print(f"Publication: - {publication}")

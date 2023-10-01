@@ -7,6 +7,7 @@ def get_author(author_id):
 
 def create_publication(admin_id, title, publication_date, author_ids):
     admin = Admin.query.filter_by(admin_id = admin_id).first()
+
     if admin:
         return admin.create_publication(title, publication_date, author_ids)
     return None
