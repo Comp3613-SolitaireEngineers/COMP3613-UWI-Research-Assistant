@@ -148,10 +148,10 @@ def list_publications_by_author_command():
     else:
         print("No publications found.")    
         
-# @publication_cli.command('search', help="search for a publication")
-# def search_publications_command():
-#     search_term = click.prompt("Enter publication search term ", type = str)
-#     publication_results, author_results = search_publications(search_term)
-#     print(publication_results, author_results)
+@publication_cli.command('search', help="search for a publication")
+def search_publications_command():
+    search_term = click.prompt("Enter publication search term ", type = str)
+    publication_results, author_results = search_publications(search_term)
+    print(publication_results, author_results)
 
-# app.cli.add_command(publication_cli) 
+app.cli.add_command(publication_cli) 
