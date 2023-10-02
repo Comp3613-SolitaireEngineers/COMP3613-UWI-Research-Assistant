@@ -1,29 +1,21 @@
 from App.database import db
-from .User import User
 
-class Author(User):
-    __tablename__ = 'author'    
-    uwi_id = db.Column(db.String(100), nullable=False, unique=True)
-    title = db.Column(db.String(40), nullable=False)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)    
-    publications = db.relationship('Publication', secondary='author_publication', overlaps='authors', lazy=True)
+class AuthorPublication(db.Model):
+    __tablename__ = 'author_publication'
+    authorpublication_id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('author.uwi_id')) 
+    publication_id = db.Column(db.Integer, db.ForeignKey('publication.publication_id'))  
 
-    def __init__(self, uwi_id, title, first_name, last_name, password):
-        super().__init__(uwi_id, password)
-        self.uwi_id = uwi_id
-        self.title = title
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, author_id,publication_id):
+        self.author_id = author_id
+        self.publication_id = publication_id   
 
-    def __repr__(self):       
-        return f"<Author {self.uwi_id}, {self.title} {self.first_name} {self.last_name}>"
+    def __repr__(self): 
+        return f"<AuthorPublication {self.authorpublication_id}, {self.author_id}, {self.publication_id}>"
 
-    def get_json(self):
+    def toJSON(self):
         return {
-            'author_id': self.id,
-            'uwi_id': self.uwi_id,
-            'title': self.title,
-            'first_name': self.first_name,
-            'last_name': self.last_name,            
+            'authorpublication_id': self.authorpublication_id,
+            'author_id': self.author_id,
+            'publication_id': self.publication_id,
         }
