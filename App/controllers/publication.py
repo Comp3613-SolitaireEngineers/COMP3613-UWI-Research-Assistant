@@ -1,17 +1,15 @@
 from App.models import Publication, AuthorPublication, Author, Admin
+from .author import get_author
 from App.database import db
 from sqlalchemy import or_
 
 
-# this one for author controller
-def get_author(author_id):
-    return Author.query.get(author_id)
 
-def create_publication(admin_id, title, publication_date, author_ids):
+def create_publication(admin_id, isbn, title, publication_date, author_ids):
     admin = Admin.query.filter_by(admin_id = admin_id).first()
 
     if admin:
-        return admin.create_publication(title, publication_date, author_ids)
+        return admin.create_publication(isbn, title, publication_date, author_ids)
     return None
 
 def search_publications(search_term):
@@ -32,3 +30,60 @@ def search_publications(search_term):
         author_results = Author.query.all()
 
     return publication_results, author_results
+
+
+def get_publications_by_author(author_id):
+    author = get_author(author_id)
+    
+    if not author:
+        return None
+
+    author_info = {
+        'author_id': author.uwi_id,
+        'name': f"{author.title} {author.first_name} {author.last_name}",
+    }
+
+    if author.publications:
+        publications = [{'ISBN': pub.isbn, 'title': pub.title, 'publication_date': pub.publication_date.strftime("%Y/%m/%d")} for pub in author.publications]
+        author_info['publications'] = publications
+    else:
+        author_info['publications'] = 'No Publications.'
+
+    return [author_info]
+
+def get_publication_tree(author_id):
+    author = get_author(author_id)
+    
+    if not author:
+        return None
+
+    def get_coauthors(author):
+        coauthors = set()
+        for publication in author.publications:
+            for coauthor in publication.authors:
+                if coauthor != author:
+                    coauthors.add(coauthor)
+        return list(coauthors)
+   
+    def build_tree(author, visited=set()):
+        
+        author_id = author.uwi_id
+        if author_id in visited:
+            return None  # Skip authors that have already been visited
+
+        visited.add(author_id)
+
+        coauthors = get_coauthors(author)
+        tree = {
+            'author_id': author.uwi_id,
+            'name': f"{author.title} {author.first_name} {author.last_name}",
+            'publications': [{'ISBN': pub.isbn, 'title': pub.title, 'publication_date': pub.publication_date.strftime("%Y/%m/%d")} for pub in author.publications]
+        }
+
+        if coauthors:
+            tree['coauthors'] = [build_tree(coauthor, visited=visited) for coauthor in coauthors]
+        
+        return tree
+
+    publication_tree = build_tree(author)
+    return [{'publication_tree': publication_tree}]

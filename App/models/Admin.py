@@ -2,7 +2,7 @@ from App.database import db
 from App.models import User
 from .Author import Author
 from .Author_Publication import AuthorPublication
-from .publication import Publication
+from .Publication import Publication
 
 class Admin(User):
     __tablename__ = 'admin'
@@ -83,10 +83,10 @@ class Admin(User):
     #         return None
     
 
-    def create_publication(self, title, publication_date, author_ids):
+    def create_publication(self, isbn, title, publication_date, author_ids):
         try:
             # create a new publication object with the given title and publication_date
-            new_publication = Publication(title=title, publication_date=publication_date)
+            new_publication = Publication(isbn=isbn ,title=title, publication_date=publication_date)
             
             # add the publication object to the database session
             db.session.add(new_publication)
@@ -118,7 +118,3 @@ class Admin(User):
         except Exception as e:
             print(e)
             return None
-
-
-
-        
