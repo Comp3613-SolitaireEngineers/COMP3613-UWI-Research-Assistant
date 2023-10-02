@@ -48,7 +48,7 @@ class Admin(User):
         
         try:
             # create a list of AuthorPublication objects
-            author_pubs = [AuthorPublication(author_id=author.uwi_id, publication_id=publication_id) for author_id in author_ids if (author := Author.query.filter_by(uwi_id=author_id).first())]
+            author_pubs = [AuthorPublication(author_id=author.uwi_id, publication_id=publication_id) for author_id in author_ids for author in (Author.query.filter_by(uwi_id=author_id).first(),) if author]
             for i in author_pubs:
                 db.session.add(i)
                 
