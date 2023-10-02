@@ -24,7 +24,7 @@ def get_admin_by_username(username):
     return Admin.query.filter_by(username=username).first()
 
 def get_admin(id):
-    return Admin.query.get(id)
+    return Admin.query.filter_by(admin_id = id).first()
 
 def get_all_admins():
     return Admin.query.all()

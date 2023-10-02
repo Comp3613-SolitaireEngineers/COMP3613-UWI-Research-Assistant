@@ -17,11 +17,11 @@ class Author(User):
         self.last_name = last_name
 
     def __repr__(self):       
-        return f"<Author {self.uwi_id}, {self.title}, {self.first_name}, {self.last_name}>"
+        return f"<Author {self.uwi_id}, {self.title} {self.first_name} {self.last_name}>"
 
     def get_json(self):
         return {
-            'author_id': self.author_id,
+            'author_id': self.id,
             'uwi_id': self.uwi_id,
             'title': self.title,
             'first_name': self.first_name,

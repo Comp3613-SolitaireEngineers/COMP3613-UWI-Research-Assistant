@@ -42,6 +42,26 @@ def create_user_command(username, password):
 
 
 '''
+Test Commands
+'''
+
+test = AppGroup('test', help='Testing commands') 
+
+@test.command("user", help="Run User tests")
+@click.argument("type", default="all")
+def user_tests_command(type):
+    if type == "unit":
+        sys.exit(pytest.main(["-k", "UserUnitTests"]))
+    elif type == "int":
+        sys.exit(pytest.main(["-k", "UserIntegrationTests"]))
+    else:
+        sys.exit(pytest.main(["-k", "App"]))
+    
+
+app.cli.add_command(test)
+
+
+'''
 Admin Commands
 '''
 
@@ -74,11 +94,11 @@ author_cli = AppGroup('author', help='Author object commands')
 
 # Then define the command and any parameters and annotate it with the group (@)
 @author_cli.command("create", help="Creates an author")
-@click.argument("uwi_id", default="struwiid")
-@click.argument("title", default="Miss")
-@click.argument("first_name", default="sally")
-@click.argument("last_name", default="may")
-@click.argument("password", default="sallypass")
+@click.argument("uwi_id", default="struwiid0")
+@click.argument("title", default="Ms.")
+@click.argument("first_name", default="Summer")
+@click.argument("last_name", default="Smith")
+@click.argument("password", default="summerpass")
 @click.argument("admin_id", default="strid")
 def create_author_command(admin_id, uwi_id, title, first_name, last_name, password):
     author = create_author(admin_id, uwi_id, title, first_name, last_name, password )
@@ -95,24 +115,6 @@ def list_authors_command():
 
 app.cli.add_command(author_cli) # add the group to the cli
 
-'''
-Test Commands
-'''
-
-test = AppGroup('test', help='Testing commands') 
-
-@test.command("user", help="Run User tests")
-@click.argument("type", default="all")
-def user_tests_command(type):
-    if type == "unit":
-        sys.exit(pytest.main(["-k", "UserUnitTests"]))
-    elif type == "int":
-        sys.exit(pytest.main(["-k", "UserIntegrationTests"]))
-    else:
-        sys.exit(pytest.main(["-k", "App"]))
-    
-
-app.cli.add_command(test)
 
 '''
 Publcations Commands
@@ -121,17 +123,33 @@ publication_cli = AppGroup('publication', help='publication object commands')
 
 @publication_cli.command('create', help='Create a publication')
 def create_publication_command():
-    title = click.prompt("Enter title ", type = str)
-    author_id = click.prompt("Enter author id ", type = str)
+    isbn = click.prompt("Enter ISBN: ", type = str)
+    title = click.prompt("Enter title: ", type = str)
+    author_id = click.prompt("Enter author id: ", type = str)
     author_ids = []
     author_ids.append(author_id)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)
-    publication = create_publication("strid", title, publication_date, author_ids)
+    publication = create_publication("strid", isbn, title, publication_date, author_ids)
   
     if publication:
         print(f"Publication: - {publication}")
     else:
         print("Publication not created.")
+
+@publication_cli.command('create_ap', help='Create a publication')
+def create_ap_publication_command():
+    admin = get_admin("strid")
+    author_id = click.prompt("Enter author id ", type = str)
+    pub_id = click.prompt("Enter publcation id ", type = int)
+    author_ids = []
+    author_ids.append(author_id)
+    publication = admin.create_author_publication(author_ids, pub_id)
+  
+    if publication:
+        print(f"Publication: - {publication}")
+    else:
+        print("Publication not created.")   
+
         
 @publication_cli.command("list", help="Lists publications in the database")
 def list_publicationss_command():
@@ -144,7 +162,7 @@ def list_publications_by_author_command():
     publications = get_publications_by_author(author_id)
     if publications:
         print("Publications:")       
-        print(f"- {publications})")
+        print(f"- {publications}")
     else:
         print("No publications found.")    
         
@@ -153,5 +171,14 @@ def search_publications_command():
     search_term = click.prompt("Enter publication search term ", type = str)
     publication_results, author_results = search_publications(search_term)
     print(publication_results, author_results)
+
+
+@publication_cli.command('publication_tree', help="Get publication tree")
+def get_publication_tree_command():
+    author_id = click.prompt("Enter author ID ", type = str)
+    publication_tree = get_publication_tree(author_id)
+    print(publication_tree)
+
+
 
 app.cli.add_command(publication_cli) 
