@@ -48,7 +48,7 @@ class Admin(User):
         
         try:
             # create a list of AuthorPublication objects
-            author_pubs = [AuthorPublication(author_id=author.uwi_id, publication_id=publication_id) for author_id in author_ids if ((author := Author.query.filter_by(uwi_id=author_id).first()))]
+            author_pubs = [AuthorPublication(author_id=author.uwi_id, publication_id=publication_id) for author_id in author_ids if (author := Author.query.filter_by(uwi_id=author_id).first())]
             for i in author_pubs:
                 db.session.add(i)
                 
@@ -103,12 +103,11 @@ class Admin(User):
             for author_id in author_ids:
                 # get the author object by uwi_id
                 author = Author.query.filter_by(uwi_id = author_id).first()
-                print(author)
                 if author:
                     # check if the author is already in the publication's authors
                     if author not in new_publication.authors:
                         # add the author to the publication's authors
-                        author.append(new_publication)
+                        author.publications.append(new_publication)
                         new_publication.authors.append(author)
              
             # commit the changes to the database
