@@ -4,8 +4,8 @@ class AuthorPublication(db.Model):
     __tablename__ = 'author_publication'
     authorpublication_id = db.Column(db.Integer, primary_key=True)
 
-    author_id = db.Column(db.Integer, db.ForeignKey('author.uwi_id')) 
-    publication_id = db.Column(db.Integer, db.ForeignKey('publication.publication_id'))  
+    author_id = db.Column(db.String(120), db.ForeignKey('author.uwi_id')) 
+    publication_id = db.Column(db.String(120), db.ForeignKey('publication.publication_id'))  
 
     def __init__(self, author_id,publication_id):
         self.author_id = author_id
