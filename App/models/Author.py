@@ -3,7 +3,7 @@ from .User import User
 
 class Author(User):
     __tablename__ = 'author'    
-    uwi_id = db.Column(db.String(100), nullable=False, unique=True)
+    uwi_id = db.Column(db.String(120), nullable=False, unique=True)
     title = db.Column(db.String(40), nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)    

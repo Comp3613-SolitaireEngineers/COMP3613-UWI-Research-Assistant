@@ -2,7 +2,7 @@ from App.database import db
 
 class Publication(db.Model):
     __tablename__ = "publication"
-    publication_id = db.Column(db.Integer, primary_key=True)
+    publication_id = db.Column(db.String(120), primary_key=True)
     isbn = db.Column(db.String(120), nullable=False, unique=True)
     title = db.Column(db.String(50), nullable=False)
     publication_date = db.Column(db.DateTime, default=None)

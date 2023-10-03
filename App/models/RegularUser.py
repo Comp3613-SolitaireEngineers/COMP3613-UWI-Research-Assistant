@@ -3,7 +3,7 @@ from App.models import User
 
 class RegularUser(User):
     __tablename__ = 'regularuser'
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.String(120), primary_key=True)
 
 
     def __init__(self, username, password):
