@@ -1,8 +1,12 @@
 from App.database import db
+import uuid
+
+def generate_short_uuid():
+    return str(uuid.uuid4())[:8]
 
 class Publication(db.Model):
     __tablename__ = "publication"
-    publication_id = db.Column(db.String(120), primary_key=True)
+    publication_id = db.Column(db.String(120), primary_key=True, default=generate_short_uuid, server_default='gen_random_uuid()')
     isbn = db.Column(db.String(120), nullable=False, unique=True)
     title = db.Column(db.String(50), nullable=False)
     publication_date = db.Column(db.DateTime, default=None)
@@ -16,7 +20,7 @@ class Publication(db.Model):
     def __repr__(self):
         return f'<Publication {self.publication_id}, ISBN: {self.isbn}, title: {self.title}, publication date: {self.publication_date.strftime("%Y/%m/%d")}>'
     
-    def toJSON(self):
+    def get_json(self):
         return{
             'publication_id': self.publication_id,
             'ISBN': self.isbn,
