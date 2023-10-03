@@ -18,6 +18,19 @@ def initialize():
     db.drop_all()
     db.create_all()
     # create_user('bob', 'bobpass')
+
+    admin = create_admin("a1", "admin1", "admin1pass")
+
+    if admin:
+        create_author("a1", "1", "Ms", "Hermione", "Granger", "hg1")
+        create_author("a1", "2", "Mr", "Harry", "Potter", "hp2")
+        create_author("a1", "3", "Mr", "Ron", "Weasley", "rw3")
+
+        publication_date = datetime.now()
+
+        create_publication("a1", "123", "paper on AI", publication_date, ["1", "2"])
+        create_publication("a1", "456", "paper on Planes", publication_date, ["1"])
+
     print('database intialized')
 
 '''
