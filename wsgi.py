@@ -19,17 +19,17 @@ def initialize():
     db.create_all()
     # create_user('bob', 'bobpass')
 
-    admin = create_admin("a1", "admin1", "admin1pass")
+    admin = create_admin("strid", "admin1", "admin1pass")
 
     if admin:
-        create_author("a1", "1", "Ms", "Hermione", "Granger", "hg1")
-        create_author("a1", "2", "Mr", "Harry", "Potter", "hp2")
-        create_author("a1", "3", "Mr", "Ron", "Weasley", "rw3")
+        create_author("strid", "1", "Ms", "Hermione", "Granger", "hg1")
+        create_author("strid", "2", "Mr", "Harry", "Potter", "hp2")
+        create_author("strid", "3", "Mr", "Ron", "Weasley", "rw3")
 
         publication_date = datetime.now()
 
-        create_publication("a1", "123", "paper on AI", publication_date, ["1", "2"])
-        create_publication("a1", "456", "paper on Planes", publication_date, ["1"])
+        pub1 = create_publication("strid", "123", "paper on AI", publication_date, ["1", "2"])
+        pub2 = create_publication("strid", "456", "paper on Planes", publication_date, ["1"])
 
     print('database intialized')
 
@@ -136,9 +136,9 @@ publication_cli = AppGroup('publication', help='publication object commands')
 
 @publication_cli.command('create', help='Create a publication')
 def create_publication_command():
-    isbn = click.prompt("Enter ISBN: ", type = str)
-    title = click.prompt("Enter title: ", type = str)
-    author_id = click.prompt("Enter author id: ", type = str)
+    isbn = click.prompt("Enter ISBN", type = str)
+    title = click.prompt("Enter title", type = str)
+    author_id = click.prompt("Enter author id", type = str)
     author_ids = []
     author_ids.append(author_id)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)

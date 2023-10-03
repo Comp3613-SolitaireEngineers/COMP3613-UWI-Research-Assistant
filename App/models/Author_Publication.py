@@ -14,7 +14,7 @@ class AuthorPublication(db.Model):
     def __repr__(self): 
         return f"<AuthorPublication {self.authorpublication_id}, {self.author_id}, {self.publication_id}>"
 
-    def toJSON(self):
+    def get_json(self):
         return {
             'authorpublication_id': self.authorpublication_id,
             'author_id': self.author_id,

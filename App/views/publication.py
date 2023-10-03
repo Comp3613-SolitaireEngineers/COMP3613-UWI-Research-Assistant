@@ -12,13 +12,28 @@ publication_views = Blueprint('publication_views', __name__, template_folder='..
 @publication_views.route('/api/publications', methods=['POST'])
 def create_publication_endpoint():
     data = request.json
-    result = create_publication(data['title'], data['publication_date'], data['author_ids'])
+    
+    result = create_publication(data['admin_id'], data['ISBN'], data['title'], data['publication_date'], data['author_ids'])
+    # result = create_publication(data['title'], data['publication_date'], data['author_ids'])
 
     if result:
-        return jsonify({'message': f"Publication  '{data['title']}'created with id {result.id}"}), 201
-
+        return jsonify({'message': f"Publication '{data['title']}'created with id {result.id}"}), 201
 
     return jsonify({"error": f"Publication '{data['title']}' not created"}), 500
+
+@publication_views.route('/api/publications/<search_term>', methods=['GET'])
+def search_publications_api(search_term):
+    publication_results, author_results = search_publications(search_term)
+
+    all_results = publication_results + author_results  # Use the + operator to combine lists
+
+    if not all_results:
+        return jsonify({'message': 'No results found'}), 404
+
+    results_json = [item.get_json() for item in all_results]
+
+    return jsonify(results_json), 200
+
 
 @publication_views.route('/api/publication_tree/<author_id>', methods=['GET'])
 def get_publication_tree_api(author_id):

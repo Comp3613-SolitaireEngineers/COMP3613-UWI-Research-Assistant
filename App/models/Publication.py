@@ -20,7 +20,7 @@ class Publication(db.Model):
     def __repr__(self):
         return f'<Publication {self.publication_id}, ISBN: {self.isbn}, title: {self.title}, publication date: {self.publication_date.strftime("%Y/%m/%d")}>'
     
-    def toJSON(self):
+    def get_json(self):
         return{
             'publication_id': self.publication_id,
             'ISBN': self.isbn,
