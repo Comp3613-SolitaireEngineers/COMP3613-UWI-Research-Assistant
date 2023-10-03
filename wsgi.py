@@ -179,8 +179,4 @@ def get_publication_tree_command():
     publication_tree = get_publication_tree(author_id)
     print(publication_tree)
 
-
-
 app.cli.add_command(publication_cli) 
-
-
