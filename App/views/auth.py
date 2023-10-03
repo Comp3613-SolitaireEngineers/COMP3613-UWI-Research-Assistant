@@ -7,7 +7,7 @@ from.index import index_views
 from App.controllers import (
     create_user,
     jwt_authenticate,
-    login 
+    login, get_all_users, get_all_users_json
 )
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
@@ -70,3 +70,6 @@ def user_login_api():
 @jwt_required()
 def identify_user_action():
     return jsonify({'message': f"username: {jwt_current_user.username}, id : {jwt_current_user.id}"})
+
+
+
