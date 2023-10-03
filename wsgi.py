@@ -182,3 +182,4 @@ def get_publication_tree_command():
 
 
 app.cli.add_command(publication_cli) 
+
