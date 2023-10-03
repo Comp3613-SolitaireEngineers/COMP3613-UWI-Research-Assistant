@@ -20,6 +20,9 @@ def create_publication_endpoint():
 
     return jsonify({"error": f"Publication '{data['title']}' not created"}), 500
 
+def get_all_publications():
+    return Publication.query.all()
+
 @publication_views.route('/api/publication_tree/<author_id>', methods=['GET'])
 def get_publication_tree_api(author_id):
     author = get_author(author_id)
@@ -36,3 +39,11 @@ def get_publications_by_author_api(author_id):
         return jsonify({'error': 'Author not found'}), 404
 
     return jsonify(get_publications_by_author(author_id)), 200
+
+@publication_views.route('/api/publications', methods=['GET'])
+def get_publications_api():
+    publications = get_all_publications()  # Implement a function to get all publications
+    if not publications:
+        return jsonify({'message': 'No Publications found'}), 404
+
+    return jsonify(publications), 200
