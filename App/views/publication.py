@@ -9,7 +9,7 @@ from App.controllers import *
 
 publication_views = Blueprint('publication_views', __name__, template_folder='../templates')
 
-@publication_views.route('/api/publications', methods=['POST'])
+@publication_views.route('/api/publication', methods=['POST'])
 def create_publication_endpoint():
     data = request.json
     
@@ -20,6 +20,7 @@ def create_publication_endpoint():
         return jsonify({'message': f"Publication '{data['title']}'created with id {result.id}"}), 201
 
     return jsonify({"error": f"Publication '{data['title']}' not created"}), 500
+  
 
 @publication_views.route('/api/publications/<search_term>', methods=['GET'])
 def search_publications_api(search_term):
