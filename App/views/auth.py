@@ -33,12 +33,19 @@ def login_page():
 
 @auth_views.route('/login', methods=['POST'])
 def login_action():
-    data = request.form
-    user = login(data['username'], data['password'])
-    if user:
-        login_user(user)
-        return 'user logged in!'
-    return 'bad username or password given', 401
+    # data = request.form
+    # user = login(data['username'], data['password'])
+    # if user:
+    #     login_user(user)
+    #     return 'user logged in!'
+    # return 'bad username or password given', 401
+    data = request.json
+    token = jwt_authenticate(data['username'], data['password'])
+    if not token:
+        return jsonify(message='bad username or password given'), 401
+
+    print(current_user.username)
+    return render_template("index.html")
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
