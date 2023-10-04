@@ -24,3 +24,12 @@ def api_create_author():
         return jsonify({'message': 'Author created successfully'}), 201
     else:
         return jsonify({'error': 'Admin not found'}), 404
+
+@author_views.route('/api/authors', methods=['GET'])
+def get_authors_api():
+    authors = get_all_authors_json()  # Implement a function to get all publications
+    if not authors:
+        return jsonify({'message': 'No Authors found'}), 404
+
+    return jsonify(authors), 200
+

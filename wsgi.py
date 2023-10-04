@@ -18,6 +18,9 @@ def initialize():
     db.drop_all()
     db.create_all()
     # create_user('bob', 'bobpass')
+
+    initialise_db()
+
     print('database intialized')
 
 '''
@@ -123,9 +126,9 @@ publication_cli = AppGroup('publication', help='publication object commands')
 
 @publication_cli.command('create', help='Create a publication')
 def create_publication_command():
-    isbn = click.prompt("Enter ISBN: ", type = str)
-    title = click.prompt("Enter title: ", type = str)
-    author_id = click.prompt("Enter author id: ", type = str)
+    isbn = click.prompt("Enter ISBN", type = str)
+    title = click.prompt("Enter title", type = str)
+    author_id = click.prompt("Enter author id", type = str)
     author_ids = []
     author_ids.append(author_id)
     publication_date = datetime.now() #click.prompt("Enter publication date", type = str)

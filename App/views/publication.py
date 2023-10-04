@@ -56,5 +56,13 @@ def api_get_publication_tree(author_id):
     author = get_author(author_id)
     if not author:
         return jsonify({'error': 'Author not found'}), 404
-
     return jsonify(get_publication_tree(author_id)), 200
+
+
+@publication_views.route('/api/publications', methods=['GET'])
+def get_publications_api():
+    publications = get_all_publications()  # Implement a function to get all publications
+    if not publications:
+        return jsonify({'message': 'No Publications found'}), 404
+
+    return jsonify(publications), 200
