@@ -5,7 +5,7 @@ from App.database import db
 def create_admin(admin_id, username, password):
     if not is_user_available(username):
         return None
-
+# 
     try:   
         admin = Admin(admin_id = admin_id, username=username, password=password)
         db.session.add(admin)
