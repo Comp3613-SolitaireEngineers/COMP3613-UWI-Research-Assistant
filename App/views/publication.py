@@ -15,17 +15,17 @@ def api_create_publication():
 
     author_ids = list(data.get('author_ids'))
 
-    if None in (data['admin_id'], data['isbn'], data['title'], data['publication_date'], author_ids):
+    if None in (data['admin_id'], data['ISBN'], data['title'], data['publication_date'], author_ids):
         return jsonify({'error': 'Missing data in the request'}), 400
 
     admin = get_admin(data['admin_id'])
     if not admin:
-        return jsonify({'error': 'Admin not found'}), 404
+        return jsonify({'error': 'Admin not found'}), 405
 
-    publication = create_publication(data['admin_id'], data['isbn'], data['title'], data['publication_date'], author_ids)
+    publication = create_publication(data['admin_id'], data['ISBN'], data['title'], datetime.strptime(data['publication_date'], "%Y-%m-%dT%H:%M:%S"), author_ids)
 
     if publication:
-        return jsonify({'message': f"Publication '{publication_date}' succuessfully created with id {publication.publication_id} "}), 201
+        return jsonify({'message': f"Publication '{publication.publication_date}' succuessfully created with id {publication.publication_id} "}), 201
     else:
         return jsonify({'error': 'Publication already exists'}), 400
 
@@ -62,7 +62,19 @@ def api_get_publication_tree(author_id):
 @publication_views.route('/api/publications', methods=['GET'])
 def get_publications_api():
     publications = get_all_publications()  # Implement a function to get all publications
+    print(publications)
     if not publications:
-        return jsonify({'message': 'No Publications found'}), 404
+        return jsonify({'message': 'No Publications found'}), 405
 
     return jsonify(publications), 200
+
+@publication_views.route('/api/publications/<search_term>', methods=['GET'])
+def get_publication_search_term(search_term):
+    publications, authors = search_publications(search_term)
+    if publications:
+        return jsonify(publications)
+    
+    if authors:
+        return jsonify(authors)
+    
+    return jsonify({'message': 'No Publications found'}), 405
