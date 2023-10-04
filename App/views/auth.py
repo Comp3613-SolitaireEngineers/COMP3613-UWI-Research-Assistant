@@ -7,7 +7,7 @@ from.index import index_views
 from App.controllers import (
     create_user,
     jwt_authenticate,
-    login, get_all_users, get_all_users_json
+    login, get_all_users, get_all_users_json, admin_required, author_required,regular_user_required
 )
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
@@ -23,9 +23,11 @@ def get_user_page():
 
 
 @auth_views.route('/identify', methods=['GET'])
-@login_required
+@jwt_required
+@admin_required
 def identify_page():
-    return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
+    # return jsonify({'message': f"username: gre, id : wrw"})
+    return jsonify({'message': f"username: {current_user}, id : {current_user}"})
 
 
 @auth_views.route('/login', methods=['POST'])
@@ -46,7 +48,7 @@ def logout_action():
 '''
 API Routes
 '''
-
+#These are regular users and not all users in the system (Not Admin and Author)
 @auth_views.route('/api/users', methods=['GET'])
 def get_users_action():
     users = get_all_users_json()
@@ -64,6 +66,8 @@ def user_login_api():
   token = jwt_authenticate(data['username'], data['password'])
   if not token:
     return jsonify(message='bad username or password given'), 401
+
+  print(current_user.username)
   return jsonify(access_token=token)
 
 @auth_views.route('/api/identify', methods=['GET'])

@@ -15,13 +15,9 @@ migrate = get_migrate(app)
 # This command creates and initializes the database
 @app.cli.command("init", help="Creates and initializes the database")
 def initialize():
-    db.drop_all()
-    db.create_all()
-    # create_user('bob', 'bobpass')
-
     initialise_db()
 
-    print('database intialized')
+    
 
 '''
 User Commands
@@ -72,7 +68,7 @@ admin_cli = AppGroup('admin', help='Admin object commands')
 
 # Then define the command and any parameters and annotate it with the group (@)
 @admin_cli.command("create", help="Creates an admin")
-@click.argument("admin_id", default="strid")
+@click.argument("admin_id", default="strid1")
 @click.argument("username", default="bob")
 @click.argument("password", default="bobpass")
 def create_admin_command(admin_id, username, password):

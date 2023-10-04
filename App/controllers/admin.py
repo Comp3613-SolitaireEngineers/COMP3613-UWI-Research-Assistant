@@ -13,7 +13,7 @@ def create_admin(admin_id, username, password):
         return admin
     except Exception as e:        
         print('Error in create admin') 
-        # print(e)           
+        print(e)           
         db.session.rollback()
         return None 
 

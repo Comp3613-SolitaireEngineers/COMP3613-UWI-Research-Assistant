@@ -5,11 +5,12 @@ from flask import Blueprint, render_template, jsonify, request, send_from_direct
 from.index import index_views
 
 from App.controllers import *
-    
+from datetime import datetime  
 
 publication_views = Blueprint('publication_views', __name__, template_folder='../templates')
 
 @publication_views.route('/api/publication', methods=['POST'])
+# @admin_required
 def create_publication_endpoint():
     data = request.json
     
@@ -17,7 +18,7 @@ def create_publication_endpoint():
     # result = create_publication(data['title'], data['publication_date'], data['author_ids'])
 
     if result:
-        return jsonify({'message': f"Publication '{data['title']}'created with id {result.id}"}), 201
+        return jsonify({'message': f"Publication '{data['title']}'created with id {result.publication_id}"}), 201
 
     return jsonify({"error": f"Publication '{data['title']}' not created"}), 500
   
