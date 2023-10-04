@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, jsonify, request, send_from_direct
 from.index import index_views
 
 from App.controllers import *
-    
+from datetime import datetime  
 
 publication_views = Blueprint('publication_views', __name__, template_folder='../templates')
 

@@ -7,7 +7,7 @@ from.index import index_views
 from App.controllers import (
     create_user,
     jwt_authenticate,
-    login, get_all_users, get_all_users_json
+    login, get_all_users, get_all_users_json, admin_required, author_required,regular_user_required
 )
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
@@ -27,26 +27,35 @@ def get_user_page():
 def identify_page():
     return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
 
+@auth_views.route('/login', methods = ['GET'])
+def login_page():  
+  return render_template('login.html')
 
 @auth_views.route('/login', methods=['POST'])
 def login_action():
-    data = request.form
-    user = login(data['username'], data['password'])
-    if user:
-        login_user(user)
-        return 'user logged in!'
-    return 'bad username or password given', 401
+    # data = request.form
+    # user = login(data['username'], data['password'])
+    # if user:
+    #     login_user(user)
+    #     return 'user logged in!'
+    # return 'bad username or password given', 401
+    data = request.json
+    token = jwt_authenticate(data['username'], data['password'])
+    if not token:
+        return jsonify(message='bad username or password given'), 401
+
+    print(current_user.username)
+    return render_template("index.html")
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
-    data = request.form
-    user = login(data['username'], data['password'])
+    logout_user()
     return 'logged out!'
 
 '''
 API Routes
 '''
-
+#These are regular users and not all users in the system (Not Admin and Author)
 @auth_views.route('/api/users', methods=['GET'])
 def get_users_action():
     users = get_all_users_json()
@@ -64,12 +73,14 @@ def user_login_api():
   token = jwt_authenticate(data['username'], data['password'])
   if not token:
     return jsonify(message='bad username or password given'), 401
+
+  print(current_user.username)
   return jsonify(access_token=token)
 
 @auth_views.route('/api/identify', methods=['GET'])
-@jwt_required()
+@login_required
 def identify_user_action():
-    return jsonify({'message': f"username: {jwt_current_user.username}, id : {jwt_current_user.id}"})
+    return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
 
 
 

@@ -6,14 +6,17 @@ from App.models import User, RegularUser, Author, Admin
 def jwt_authenticate(username, password):
   user = RegularUser.query.filter_by(username=username).first()
   if user and user.check_password(password):
+      login(username, password)
       return create_access_token(identity=username)
   
   user = Admin.query.filter_by(username=username).first()
   if user and user.check_password(password):
+    login_user(user)
     return create_access_token(identity=username)
 
   user = Author.query.filter_by(username=username).first()
   if user and user.check_password(password):
+    login(username, password)
     return create_access_token(identity=username)
 
   return None
@@ -76,3 +79,30 @@ def setup_jwt(app):
         return User.query.get(identity)
 
     return jwt
+  
+from functools import wraps
+from flask_login import current_user
+from flask import render_template
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or not isinstance(current_user, Admin):
+            return render_template("index.html"),401
+        return func(*args, **kwargs)
+    return wrapper
+  
+def author_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or not isinstance(current_user, Author):
+            return render_template("index.html"),401
+        return func(*args, **kwargs)
+    return wrapper
+  
+def regular_user_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or not isinstance(current_user, RegularUser):
+            return render_template("index.html"),401
+        return func(*args, **kwargs)
+    return wrapper

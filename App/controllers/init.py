@@ -6,6 +6,10 @@ from .publication import create_publication
 from datetime import datetime
 
 def initialise_db():
+    db.drop_all()
+    db.create_all()
+    # create_user('bob', 'bobpass')
+
     admin = create_admin("strid", "admin1", "admin1pass")
 
     if admin:
@@ -17,3 +21,5 @@ def initialise_db():
 
         pub1 = create_publication("strid", "123", "paper on AI", publication_date, ["1", "2"])
         pub2 = create_publication("strid", "456", "paper on Planes", publication_date, ["1"])
+        
+    print('database intialized')
