@@ -23,12 +23,13 @@ def get_user_page():
 
 
 @auth_views.route('/identify', methods=['GET'])
-@jwt_required
-@admin_required
+@login_required
 def identify_page():
-    # return jsonify({'message': f"username: gre, id : wrw"})
-    return jsonify({'message': f"username: {current_user}, id : {current_user}"})
+    return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
 
+@auth_views.route('/login', methods = ['GET'])
+def login_page():  
+  return render_template('login.html')
 
 @auth_views.route('/login', methods=['POST'])
 def login_action():
@@ -71,9 +72,9 @@ def user_login_api():
   return jsonify(access_token=token)
 
 @auth_views.route('/api/identify', methods=['GET'])
-@jwt_required()
+@login_required
 def identify_user_action():
-    return jsonify({'message': f"username: {jwt_current_user.username}, id : {jwt_current_user.id}"})
+    return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
 
 
 
