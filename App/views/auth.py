@@ -42,8 +42,7 @@ def login_action():
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
-    data = request.form
-    user = login(data['username'], data['password'])
+    logout_user()
     return 'logged out!'
 
 '''
