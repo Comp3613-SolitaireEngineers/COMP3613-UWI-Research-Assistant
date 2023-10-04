@@ -10,51 +10,54 @@ from App.controllers import *
 publication_views = Blueprint('publication_views', __name__, template_folder='../templates')
 
 @publication_views.route('/api/publication', methods=['POST'])
-def create_publication_endpoint():
+def api_create_publication():
     data = request.json
-    
-    result = create_publication(data['admin_id'], data['ISBN'], data['title'], data['publication_date'], data['author_ids'])
-    # result = create_publication(data['title'], data['publication_date'], data['author_ids'])
 
-    if result:
-        return jsonify({'message': f"Publication '{data['title']}'created with id {result.id}"}), 201
+    author_ids = list(data.get('author_ids'))
 
-    return jsonify({"error": f"Publication '{data['title']}' not created"}), 500
-  
+    if None in (data['admin_id'], data['isbn'], data['title'], data['publication_date'], author_ids):
+        return jsonify({'error': 'Missing data in the request'}), 400
 
-@publication_views.route('/api/publications/<search_term>', methods=['GET'])
-def search_publications_api(search_term):
-    publication_results, author_results = search_publications(search_term)
+    admin = get_admin(data['admin_id'])
+    if not admin:
+        return jsonify({'error': 'Admin not found'}), 404
 
-    all_results = publication_results + author_results  # Use the + operator to combine lists
+    publication = create_publication(data['admin_id'], data['isbn'], data['title'], data['publication_date'], author_ids)
 
-    if not all_results:
-        return jsonify({'message': 'No results found'}), 404
-
-    results_json = [item.get_json() for item in all_results]
-
-    return jsonify(results_json), 200
-
-
-def get_all_publications():
-    return Publication.query.all()
-
-@publication_views.route('/api/publication_tree/<author_id>', methods=['GET'])
-def get_publication_tree_api(author_id):
-    author = get_author(author_id)
-    if not author:
-        return jsonify({'error': 'Author not found'}), 404
-
-    return jsonify(get_publication_tree(author_id)), 200
+    if publication:
+        return jsonify({'message': f"Publication '{publication_date}' succuessfully created with id {publication.publication_id} "}), 201
+    else:
+        return jsonify({'error': 'Publication already exists'}), 400
 
 @publication_views.route('/api/author_publications/<author_id>', methods=['GET'])
-def get_publications_by_author_api(author_id):
-    # data = request.json
+def api_get_publications_by_author(author_id):
+
     author = get_author(author_id)
     if not author:
         return jsonify({'error': 'Author not found'}), 404
+    
+    author_publications = get_publications_by_author(author_id)
 
-    return jsonify(get_publications_by_author(author_id)), 200
+    author_info = {
+        'author_id': author.uwi_id,
+        'name': f"{author.title} {author.first_name} {author.last_name}",
+    }
+
+    if author_publications:
+        publications = [{'ISBN': pub.isbn, 'title': pub.title, 'publication_date': pub.publication_date.strftime("%Y/%m/%d")} for pub in author_publications]
+        author_info['publications'] = publications
+    else:
+        author_info['publications'] = 'No Publications.'
+
+    return jsonify([author_info]), 200
+
+@publication_views.route('/api/publication_tree/<author_id>', methods=['GET'])
+def api_get_publication_tree(author_id):
+    author = get_author(author_id)
+    if not author:
+        return jsonify({'error': 'Author not found'}), 404
+    return jsonify(get_publication_tree(author_id)), 200
+
 
 @publication_views.route('/api/publications', methods=['GET'])
 def get_publications_api():
