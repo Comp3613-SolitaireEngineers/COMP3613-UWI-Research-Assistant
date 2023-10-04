@@ -38,18 +38,10 @@ def get_publications_by_author(author_id):
     if not author:
         return None
 
-    author_info = {
-        'author_id': author.uwi_id,
-        'name': f"{author.title} {author.first_name} {author.last_name}",
-    }
-
     if author.publications:
-        publications = [{'ISBN': pub.isbn, 'title': pub.title, 'publication_date': pub.publication_date.strftime("%Y/%m/%d")} for pub in author.publications]
-        author_info['publications'] = publications
-    else:
-        author_info['publications'] = 'No Publications.'
+       return author.publications
 
-    return [author_info]
+    return None
 
 def get_publication_tree(author_id):
     author = get_author(author_id)

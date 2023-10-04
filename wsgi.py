@@ -161,10 +161,11 @@ def list_publications_by_author_command():
     author_id = click.prompt("Enter author ID ", type = str)
     publications = get_publications_by_author(author_id)
     if publications:
-        print("Publications:")       
-        print(f"- {publications}")
+        print("Publications:")  
+        for pub in publications:             
+            print(f"- {pub}")
     else:
-        print("No publications found.")    
+        print("No publications found.")   
         
 @publication_cli.command('search', help="search for a publication")
 def search_publications_command():
