@@ -29,7 +29,7 @@ def search_publications(search_term):
         publication_results = Publication.query.all()
         author_results = Author.query.all()
 
-    return publication_results, author_results
+    return [publication.get_json() for publication in publication_results], [author.get_json() for author in author_results]
 
 
 def get_publications_by_author(author_id):
@@ -79,3 +79,9 @@ def get_publication_tree(author_id):
 
     publication_tree = build_tree(author)
     return [{'publication_tree': publication_tree}]
+
+def get_all_publications():
+    publications = Publication.query.all()
+    
+    results = [publication.get_json() for publication in publications]
+    return results
