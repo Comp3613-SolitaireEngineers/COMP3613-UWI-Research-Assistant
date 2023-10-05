@@ -25,7 +25,7 @@ def api_create_publication():
     publication = create_publication(data['admin_id'], data['ISBN'], data['title'], datetime.strptime(data['publication_date'], "%Y-%m-%dT%H:%M:%S"), author_ids)
 
     if publication:
-        return jsonify({'message': f"Publication '{publication.publication_date}' succuessfully created with id {publication.publication_id} "}), 201
+        return jsonify({'message': f"Publication '{publication.publication_date}' successfully created with id {publication.publication_id} "}), 201
     else:
         return jsonify({'error': 'Publication already exists'}), 400
 
