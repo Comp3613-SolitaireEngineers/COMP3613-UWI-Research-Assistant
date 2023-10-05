@@ -66,7 +66,7 @@ def get_publications_api():
     if not publications:
         return jsonify({'message': 'No Publications found'}), 405
 
-    return jsonify(publications), 200
+    return jsonify([pub.get_json() for pub in publications]), 200
 
 @publication_views.route('/api/publications/<search_term>', methods=['GET'])
 def get_publication_search_term(search_term):
