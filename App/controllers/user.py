@@ -1,5 +1,6 @@
 from App.models import RegularUser, Admin
 from App.database import db
+from App.models import Author
 
 def create_user(username, password):
     newuser = RegularUser(username=username, password=password)
@@ -37,7 +38,7 @@ def is_user_available(username):
         db.or_(
             RegularUser.query.filter(RegularUser.username == username).exists(),
             Admin.query.filter(Admin.username == username).exists(),
-            Author.query.filter(Author.username == username).exists(),
+            Author.query.filter(Author.username == username).exists()
         )
     )
 

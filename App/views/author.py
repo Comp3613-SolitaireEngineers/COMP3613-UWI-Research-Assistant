@@ -18,12 +18,15 @@ def api_create_author():
     if None in (admin_id, uwi_id, title, first_name, last_name, password):
         return jsonify({'error': 'Missing data in the request'}), 400
 
+    if not (get_admin(admin_id)):
+        return jsonify({'error': 'Admin not found'}), 404
+
     author = create_author(admin_id, uwi_id, title, first_name, last_name, password)
 
     if author:
         return jsonify({'message': 'Author created successfully'}), 201
     else:
-        return jsonify({'error': 'Admin not found'}), 404
+        return jsonify({'error': 'Author not created'}), 400
 
 @author_views.route('/api/authors', methods=['GET'])
 def get_authors_api():

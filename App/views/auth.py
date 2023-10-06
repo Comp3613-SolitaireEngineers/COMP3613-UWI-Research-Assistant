@@ -70,6 +70,7 @@ def create_user_endpoint():
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
   data = request.json
+  logout_user()
   token = jwt_authenticate(data['username'], data['password'])
   if not token:
     return jsonify(message='bad username or password given'), 401
