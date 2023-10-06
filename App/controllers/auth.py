@@ -2,6 +2,7 @@ from flask_login import login_user, login_manager, logout_user, LoginManager
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager
 
 from App.models import User, RegularUser, Author, Admin
+from App.controllers import is_user_available
 
 def jwt_authenticate(username, password):
   user = RegularUser.query.filter_by(username=username).first()
@@ -34,6 +35,14 @@ def login(username, password):
     if user and user.check_password(password):
         return user  
     return None
+
+# def signup(username, password):
+#     if not is_user_available(username):
+#         return None
+
+    
+
+    # return 
 
 def setup_flask_login(app):
     login_manager = LoginManager()

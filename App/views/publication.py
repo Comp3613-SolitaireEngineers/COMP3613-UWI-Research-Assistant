@@ -10,6 +10,7 @@ from datetime import datetime
 publication_views = Blueprint('publication_views', __name__, template_folder='../templates')
 
 @publication_views.route('/api/publication', methods=['POST'])
+@admin_required
 def api_create_publication():
     data = request.json
 
@@ -25,7 +26,7 @@ def api_create_publication():
     publication = create_publication(data['admin_id'], data['ISBN'], data['title'], datetime.strptime(data['publication_date'], "%Y-%m-%dT%H:%M:%S"), author_ids)
 
     if publication:
-        return jsonify({'message': f"Publication '{publication.publication_date}' succuessfully created with id {publication.publication_id} "}), 201
+        return jsonify({'message': f"Publication '{publication.publication_date}' successfully created with id {publication.publication_id} "}), 201
     else:
         return jsonify({'error': 'Publication already exists'}), 400
 
@@ -66,7 +67,7 @@ def get_publications_api():
     if not publications:
         return jsonify({'message': 'No Publications found'}), 405
 
-    return jsonify([pub.get_json() for pub in publications]), 200
+    return jsonify([pub for pub in publications]), 200
 
 @publication_views.route('/api/publications/<search_term>', methods=['GET'])
 def get_publication_search_term(search_term):
@@ -77,4 +78,4 @@ def get_publication_search_term(search_term):
     if authors:
         return jsonify(authors)
     
-    return jsonify({'message': 'No Publications found'}), 405
+    return jsonify({'message': 'No Publications found'}), 404
