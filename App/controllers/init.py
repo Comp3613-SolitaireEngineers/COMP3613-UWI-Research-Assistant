@@ -63,7 +63,7 @@ def initialise_db():
             # ["2", "4", "8", "9"],
         ]
 
-        create_publication("strid", "pub1", "Paper on AI", publication_date, author_lists[0])
+        create_publication("strid", "pub1", "Paper on Herbology", publication_date, author_lists[0])
         create_publication("strid", "pub2", "Paper on Planes", publication_date, author_lists[1])
         create_publication("strid", "pub3", "Paper on Magic", publication_date, author_lists[2])
         create_publication("strid", "pub4", "Paper on Quidditch", publication_date, author_lists[3])
