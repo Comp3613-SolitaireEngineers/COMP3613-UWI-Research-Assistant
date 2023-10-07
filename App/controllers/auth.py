@@ -1,5 +1,6 @@
 from flask_login import login_user, login_manager, logout_user, LoginManager
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager
+from flask import jsonify
 
 from App.models import User, RegularUser, Author, Admin
 from App.controllers import is_user_available
@@ -96,7 +97,7 @@ def admin_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated or not isinstance(current_user, Admin):
-            return render_template("index.html"),401
+            return jsonify({"error" : "Permission Denied. This action is restricted to admin only" }), 401
         return func(*args, **kwargs)
     return wrapper
   
