@@ -26,16 +26,17 @@ def initialise_db():
         # pub5 = create_publication("strid", "123", "paper on AI", publication_date, ["1", "2"])
         # pub6 = create_publication("strid", "456", "paper on Planes", publication_date, ["1"])
 
+
         create_author("strid", "1", "Ms", "Hermione", "Granger", "hg1")
         create_author("strid", "2", "Mr", "Harry", "Potter", "hp2")
         create_author("strid", "3", "Mr", "Ron", "Weasley", "rw3")
         create_author("strid", "4", "Ms", "Luna", "Lovegood", "ll4")
         create_author("strid", "5", "Mr", "Draco", "Malfoy", "dm5")
         create_author("strid", "6", "Ms", "Ginny", "Weasley", "gw6")
-        create_author("strid", "7", "Mr", "Neville", "Longbottom", "nl7")
-        create_author("strid", "8", "Ms", "Bellatrix", "Lestrange", "bl8")
-        create_author("strid", "9", "Mr", "Sirius", "Black", "sb9")
-        create_author("strid", "10", "Mr", "Remus", "Lupin", "rl10")
+        # create_author("strid", "7", "Mr", "Neville", "Longbottom", "nl7")
+        # create_author("strid", "8", "Ms", "Bellatrix", "Lestrange", "bl8")
+        # create_author("strid", "9", "Mr", "Sirius", "Black", "sb9")
+        # create_author("strid", "10", "Mr", "Remus", "Lupin", "rl10")
 
         publication_date = datetime.now()
 
@@ -43,23 +44,23 @@ def initialise_db():
             ["1", "2"],
             ["1", "3", "4"],
             ["1", "2", "3", "5"],
-            ["1", "4", "6", "7"],
-            ["2", "3", "5", "8", "10"],
-            ["1", "2", "5", "7", "9"],
+            ["1", "4", "6", "2"],
+            ["2", "3"],
+            ["5"],
             ["1", "3", "6"],
-            ["2", "4", "7", "8"],
-            ["3", "5", "9"],
-            ["4", "6", "10"],
-            ["1", "3", "5", "7"],
-            ["2", "4", "6", "8", "10"],
-            ["1", "2", "3", "4", "5", "6", "7"],
-            ["4", "6"],
-            ["1", "2", "3", "5", "8", "10"],
-            ["1", "4", "6", "7"],
-            ["2", "3", "5", "9"],
-            ["1", "2", "4", "6", "7"],
-            ["1", "3", "5", "7", "10"],
-            ["2", "4", "8", "9"],
+            ["2", "4", "1", "3"],
+            ["3", "5", "4"],
+            ["4", "6", "1"],
+            # ["1", "3", "5", "7"],
+            # ["2", "4", "6", "8", "10"],
+            # ["1", "2", "3", "4", "5", "6", "7"],
+            # ["4", "6"],
+            # ["1", "2", "3", "5", "8", "10"],
+            # ["1", "4", "6", "7"],
+            # ["2", "3", "5", "9"],
+            # ["1", "2", "4", "6", "7"],
+            # ["1", "3", "5", "7", "10"],
+            # ["2", "4", "8", "9"],
         ]
 
         create_publication("strid", "pub1", "Paper on AI", publication_date, author_lists[0])
@@ -72,15 +73,15 @@ def initialise_db():
         create_publication("strid", "pub8", "Paper on Spells", publication_date, author_lists[7])
         create_publication("strid", "pub9", "Paper on Hogwarts", publication_date, author_lists[8])
         create_publication("strid", "pub10", "Paper on Dark Arts", publication_date, author_lists[9])
-        create_publication("strid", "pub11", "Paper on Invisibility", publication_date, author_lists[10])
-        create_publication("strid", "pub12", "Paper on Patronus", publication_date, author_lists[11])
-        create_publication("strid", "pub13", "Paper on Horcruxes", publication_date, author_lists[12])
-        create_publication("strid", "pub14", "Paper on Marauders", publication_date, author_lists[13])
-        create_publication("strid", "pub15", "Paper on Phoenix", publication_date, author_lists[14])
-        create_publication("strid", "pub16", "Paper on Time-Turner", publication_date, author_lists[15])
-        create_publication("strid", "pub17", "Paper on Quibbler", publication_date, author_lists[16])
-        create_publication("strid", "pub18", "Paper on Triwizard", publication_date, author_lists[17])
-        create_publication("strid", "pub19", "Paper on Beasts", publication_date, author_lists[18])
-        create_publication("strid", "pub20", "Paper on Potion-Making", publication_date, author_lists[19])
+        # create_publication("strid", "pub11", "Paper on Invisibility", publication_date, author_lists[10])
+        # create_publication("strid", "pub12", "Paper on Patronus", publication_date, author_lists[11])
+        # create_publication("strid", "pub13", "Paper on Horcruxes", publication_date, author_lists[12])
+        # create_publication("strid", "pub14", "Paper on Marauders", publication_date, author_lists[13])
+        # create_publication("strid", "pub15", "Paper on Phoenix", publication_date, author_lists[14])
+        # create_publication("strid", "pub16", "Paper on Time-Turner", publication_date, author_lists[15])
+        # create_publication("strid", "pub17", "Paper on Quibbler", publication_date, author_lists[16])
+        # create_publication("strid", "pub18", "Paper on Triwizard", publication_date, author_lists[17])
+        # create_publication("strid", "pub19", "Paper on Beasts", publication_date, author_lists[18])
+        # create_publication("strid", "pub20", "Paper on Potion-Making", publication_date, author_lists[19])
 
     print('database intialized')
