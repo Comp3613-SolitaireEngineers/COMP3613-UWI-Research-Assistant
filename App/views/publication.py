@@ -26,7 +26,7 @@ def api_create_publication():
     publication = create_publication(data['admin_id'], data['ISBN'], data['title'], datetime.strptime(data['publication_date'], "%Y-%m-%dT%H:%M:%S"), author_ids)
 
     if publication:
-        return jsonify({'message': f"Publication '{publication.publication_date}' successfully created with id {publication.publication_id} "}), 201
+        return jsonify({'message': f"Publication '{publication.title}' successfully created with id {publication.publication_id} "}), 201
     else:
         return jsonify({'error': 'Publication already exists'}), 400
 
@@ -72,10 +72,16 @@ def get_publications_api():
 @publication_views.route('/api/publications/<search_term>', methods=['GET'])
 def get_publication_search_term(search_term):
     publications, authors = search_publications(search_term)
-    if publications:
-        return jsonify(publications)
+
+    result = {'publications': publications, 'authors': authors}
     
-    if authors:
-        return jsonify(authors)
+    if publications or authors:
+        return jsonify(result)
+
+    # if publications:
+    #     return jsonify(publications)
     
-    return jsonify({'message': 'No Publications found'}), 404
+    # if authors:
+    #     return jsonify(authors)
+    
+    return jsonify({'message': 'No results found'}), 404
