@@ -74,6 +74,10 @@ def get_publication_tree(author_id):
 
         if coauthors:
             tree['coauthors'] = [build_tree(coauthor, visited=visited) for coauthor in coauthors]
+
+            # # Filter out None values from the coauthors list
+            # tree['coauthors'] = [coauthor for coauthor in tree['coauthors'] if coauthor is not None]
+        
         
         return tree
 

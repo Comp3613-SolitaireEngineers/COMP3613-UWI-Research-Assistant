@@ -21,7 +21,7 @@ def api_create_publication():
 
     admin = get_admin(data['admin_id'])
     if not admin:
-        return jsonify({'error': 'Admin not found'}), 405
+        return jsonify({'error': 'Admin not found'}), 401
 
     publication = create_publication(data['admin_id'], data['ISBN'], data['title'], datetime.strptime(data['publication_date'], "%Y-%m-%dT%H:%M:%S"), author_ids)
 
