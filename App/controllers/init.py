@@ -11,7 +11,6 @@ def initialise_db():
     # create_user('bob', 'bobpass')
 
     admin = create_admin("strid", "admin1", "admin1pass")
-
     if admin:
         # create_author("strid", "1", "Ms", "Hermione", "Granger", "hg1")
         # create_author("strid", "2", "Mr", "Harry", "Potter", "hp2")
@@ -27,7 +26,7 @@ def initialise_db():
         # pub6 = create_publication("strid", "456", "paper on Planes", publication_date, ["1"])
 
 
-        create_author("strid", "1", "Ms", "Hermione", "Granger", "hg1")
+        a = create_author("strid", "1", "Ms", "Hermione", "Granger", "hg1")
         create_author("strid", "2", "Mr", "Harry", "Potter", "hp2")
         create_author("strid", "3", "Mr", "Ron", "Weasley", "rw3")
         create_author("strid", "4", "Ms", "Luna", "Lovegood", "ll4")
