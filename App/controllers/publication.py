@@ -1,7 +1,7 @@
 from App.models import Publication, AuthorPublication, Author, Admin
 from .author import get_author
 from App.database import db
-from sqlalchemy import or_
+from sqlalchemy import or_, TEXT
 
 
 
@@ -18,8 +18,8 @@ def search_publications(search_term):
 
     if search_term!="":
           publication_results = Publication.query.filter(
-                or_(Publication.title.ilike(f'%{search_term}%'), Publication.publication_date.ilike(f'%{search_term}%'))
-          ).all()
+                or_(Publication.title.ilike(f'%{search_term}%'), Publication.publication_date.cast(TEXT).ilike(f'%{search_term}%'))
+    ).all()
 
           author_results = Author.query.filter(
                or_(Author.first_name.ilike(f'%{search_term}%'), Author.last_name.ilike(f'%{search_term}%'))
