@@ -5,6 +5,7 @@ from App.controllers import *
 author_views = Blueprint('author_views', __name__, template_folder='../templates')
 
 @author_views.route('/api/author', methods=['POST'])
+@admin_required
 def api_create_author():
     data = request.json
 

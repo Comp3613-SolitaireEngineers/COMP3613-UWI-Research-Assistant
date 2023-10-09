@@ -61,7 +61,11 @@ def get_publication_tree(author_id):
         
         author_id = author.uwi_id
         if author_id in visited:
-            return None  # Skip authors that have already been visited
+            return {
+                'author_id': author.uwi_id,
+                'name': f"{author.title} {author.first_name} {author.last_name}",
+                'publications': [{'ISBN': pub.isbn, 'title': pub.title, 'publication_date': pub.publication_date.strftime("%Y/%m/%d")} for pub in author.publications]
+            }
 
         visited.add(author_id)
 
