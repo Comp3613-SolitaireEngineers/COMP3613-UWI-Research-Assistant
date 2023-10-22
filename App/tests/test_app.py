@@ -119,60 +119,89 @@ class UsersIntegrationTests(unittest.TestCase):
         self.assertListEqual([{"publication_id": publication.publication_id, "ISBN":"pub3", "title":"Paper on Who is the Clone Beth?", "publication_date":pub_date_formatted}], publications_json)
 
     def test_get_publication_tree(self):
-        author1 = create_author("strid", "6", "Mr.", "bird", "person", "bird_man")
-        author2 = create_author("strid", "7", "Ms.", "poopy", "butthole", "poopy")
-        author3 = create_author("strid", "8", "Mr.", "rick", "prime", "prime_rick")
+        author1 = create_author("strid", "7", "Mr.", "bird", "person", "bird_man")
+        author2 = create_author("strid", "8", "Ms.", "poopy", "butthole", "poopy")
+        author3 = create_author("strid", "9", "Mr.", "rick", "prime", "prime_rick")
 
-        pub_date = datetime.now()
+        pub_date  = datetime.strptime("29 Sep 2023 10:00", "%d %b %Y %H:%M")
+
         publication1 = create_publication("strid", "pub4", "Paper on Rick and Morty", pub_date, [author1.uwi_id, author2.uwi_id])
         publication2 = create_publication("strid", "pub5", "Paper on Rick and Morty: The Vat of Acid", pub_date, [author3.uwi_id, author2.uwi_id])
 
        
-        tree1 = get_publication_tree("6")
-        expected_tree1 = [{'publication_tree': 
-        {
-            'author_id': author1.uwi_id,
-            'name': 'Mr. bird person',
-            'publications': [
-                {'ISBN': 'pub4', 'title': 'Paper on Rick and Morty', 'publication_date': pub_date.strftime("%Y/%m/%d")}                
-            ],
-            'coauthors': [
-                {
-                    'author_id': author2.uwi_id,
-                    'name': 'Ms. poopy butthole',
-                    'publications': [
-                        {'ISBN': 'pub4', 'title': 'Paper on Rick and Morty', 'publication_date': pub_date.strftime("%Y/%m/%d")},
-                        {'ISBN': 'pub5', 'title': 'Paper on Rick and Morty: The Vat of Acid', 'publication_date': pub_date.strftime("%Y/%m/%d")}
-                    ],
-                    'coauthors': [
-                        {
-                            'author_id': author3.uwi_id,
-                            'name': 'Mr. rick prime',
-                            'publications': [
-                                {'ISBN': 'pub5', 'title': 'Paper on Rick and Morty: The Vat of Acid', 'publication_date': pub_date.strftime("%Y/%m/%d")}
-                            ],
-                            'coauthors': [{
-                                'author_id': author2.uwi_id,
-                                'name': 'Ms. poopy butthole',
-                                'publications': [
-                                    {'ISBN': 'pub4', 'title': 'Paper on Rick and Morty', 'publication_date': pub_date.strftime("%Y/%m/%d")},
-                                    {'ISBN': 'pub5', 'title': 'Paper on Rick and Morty: The Vat of Acid', 'publication_date': pub_date.strftime("%Y/%m/%d")}
-                                ]
-                            }]
-                        },
-                        {
-                            'author_id': author1.uwi_id,
-                            'name': 'Mr. bird person',
-                            'publications': [
-                                {'ISBN': 'pub4', 'title': 'Paper on Rick and Morty', 'publication_date': pub_date.strftime("%Y/%m/%d")}
-                            ]
-                        }
-            ]
-        }
-        ]}}]
+        tree1 = get_publication_tree("7")
+        expected_tree1= [{'publication_tree': 
+                            {'author_id': author1.uwi_id, 
+                             'name': 'Mr. bird person', 
+                             'publications': [
+                                                {
+                                                    'ISBN': 'pub4', 
+                                                    'title': 'Paper on Rick and Morty', 
+                                                    'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                }
+                                             ], 
+                             'coauthors':   [
+                                                {
+                                                    'author_id': author2.uwi_id, 
+                                                    'name': 'Ms. poopy butthole', 
+                                                    'publications': [
+                                                                        {
+                                                                            'ISBN': 'pub4', 
+                                                                            'title': 'Paper on Rick and Morty', 
+                                                                            'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                        }, 
+                                                                        {
+                                                                            'ISBN': 'pub5', 
+                                                                            'title': 'Paper on Rick and Morty: The Vat of Acid', 
+                                                                            'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                        }
+                                                                    ], 
+                                                    'coauthors':[
+                                                                    {
+                                                                        'author_id': author1.uwi_id, 
+                                                                        'name': 'Mr. bird person', 
+                                                                        'publications': [{
+                                                                                            'ISBN': 'pub4', 
+                                                                                            'title': 'Paper on Rick and Morty', 
+                                                                                            'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                                        }]
+                                                                    }, 
+                                                                    {
+                                                                        'author_id': author3.uwi_id, 
+                                                                        'name': 'Mr. rick prime', 
+                                                                        'publications': [
+                                                                                            {
+                                                                                                'ISBN': 'pub5', 
+                                                                                                'title': 'Paper on Rick and Morty: The Vat of Acid', 
+                                                                                                'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                                            }
+                                                                                        ], 
+                                                                        'coauthors':[
+                                                                                        {
+                                                                                            'author_id': author2.uwi_id, 
+                                                                                            'name': 'Ms. poopy butthole', 
+                                                                                            'publications': [
+                                                                                                                {
+                                                                                                                'ISBN': 'pub4', 
+                                                                                                                'title': 'Paper on Rick and Morty', 
+                                                                                                                'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                                                                }, 
+                                                                                                                {
+                                                                                                                'ISBN': 'pub5', 
+                                                                                                                'title': 'Paper on Rick and Morty: The Vat of Acid', 
+                                                                                                                'publication_date': pub_date.strftime("%Y/%m/%d")
+                                                                                                                }
+                                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                    }
+                                                                ]
+                                                }
+                                            ]
+                             }
+                        }]
         self.assertListEqual(expected_tree1, tree1)
 
-
-        tree2 = get_publication_tree("9")
+        tree2 = get_publication_tree("10")
         self.assertIsNone(tree2)
 
