@@ -4,7 +4,7 @@ from datetime import datetime
 
 from App.main import create_app
 from App.database import db, create_db
-from App.models import User
+from App.models import User, Author, Admin, Publication, AuthorPublication
 from App.controllers import (
     create_user,
     get_all_users_json,
@@ -31,6 +31,32 @@ class UserUnitTests(unittest.TestCase):
     def test_new_user(self):
         user = User("bob", "bobpass")
         assert user.username == "bob"
+
+    def test_new_author(self):
+        author = Author("817364712", "Mr", "ron", "john", "ronpass")
+        assert author.uwi_id == "817364712"
+        assert author.title == "Mr"
+        assert author.first_name == "ron"
+        assert author.last_name == "john"
+        # assert author.password == "ronpass"
+        
+    def test_new_admin(self):
+        admin = Admin("817630671", "admin1", "admin1pass")
+        assert admin.admin_id == "817630671"
+        assert admin.username == "admin1"
+        # assert admin.password == "admin1pass"
+
+    def test_new_publication(self):
+        publication = Publication("978-0-596-52068-7", "Example Paper", "01-02-2023")
+        assert publication.isbn == "978-0-596-52068-7"
+        assert publication.title == "Example Paper"
+        assert publication.publication_date == "01-02-2023"
+    
+    def test_new_author_publication(self):
+        author_pub = AuthorPublication("817364712", "pub4")
+        assert author_pub.author_id == "817364712"
+        assert author_pub.publication_id == "pub4"
+
 
     # pure function no side effects or integrations called
     # def test_get_json(self):
