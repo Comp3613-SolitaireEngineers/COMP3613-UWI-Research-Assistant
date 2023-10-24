@@ -1,6 +1,7 @@
 import os, tempfile, pytest, logging, unittest
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+from unittest import mock
 
 from App.main import create_app
 from App.database import db, create_db
@@ -205,3 +206,21 @@ class UsersIntegrationTests(unittest.TestCase):
         tree2 = get_publication_tree("10")
         self.assertIsNone(tree2)
 
+# Define a fixture function that returns a mock config object
+@pytest.fixture
+def mock_config():
+    # Create a mock config object with some attributes
+    config = mock.Mock()
+    config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
+    config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='sqlite' user='viewer'"
+    config.SECRET_KEY = "123456789"
+
+    return config
+
+# Define a test function that uses the fixture as an argument
+def test_app(mock_config):
+
+    app = create_app(mock_config)
+    assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=7)
+    assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='sqlite' user='viewer'"
+    assert app.config['SECRET_KEY'] == "123456789"
