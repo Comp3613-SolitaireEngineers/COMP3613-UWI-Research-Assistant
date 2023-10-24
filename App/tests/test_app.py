@@ -4,7 +4,7 @@ from datetime import datetime
 
 from App.main import create_app
 from App.database import db, create_db
-from App.models import User
+from App.models import User, Author, Admin, Publication, AuthorPublication, RegularUser
 from App.controllers import (
     create_user,
     get_all_users_json,
@@ -29,14 +29,82 @@ LOGGER = logging.getLogger(__name__)
 class UserUnitTests(unittest.TestCase):
 
     def test_new_user(self):
-        user = User("bob", "bobpass")
+        user = RegularUser("bob", "bobpass")
         assert user.username == "bob"
 
+    def test_new_author(self):
+        author = Author("817364712", "Mr", "ron", "john", "ronpass")
+        assert author.uwi_id == "817364712"
+        assert author.title == "Mr"
+        assert author.first_name == "ron"
+        assert author.last_name == "john"
+        # assert author.password == "ronpass"
+        
+    def test_new_admin(self):
+        admin = Admin("817630671", "admin1", "admin1pass")
+        assert admin.admin_id == "817630671"
+        assert admin.username == "admin1"
+        # assert admin.password == "admin1pass"
+
+    def test_new_publication(self):
+        publication = Publication("978-0-596-52068-7", "Example Paper", "01-02-2023")
+        assert publication.isbn == "978-0-596-52068-7"
+        assert publication.title == "Example Paper"
+        assert publication.publication_date == "01-02-2023"
+    
+    def test_new_author_publication(self):
+        author_pub = AuthorPublication("817364712", "pub4")
+        assert author_pub.author_id == "817364712"
+        assert author_pub.publication_id == "pub4"
+
+
     # pure function no side effects or integrations called
-    # def test_get_json(self):
-    #     user = User("bob", "bobpass")
-    #     user_json = user.get_json()
-    #     self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+    def test_user_get_json(self):
+        user = RegularUser("bob", "bobpass")
+        user_json = user.get_json()
+        
+        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+
+    def test_author_get_json(self):
+        author = Author("817364712", "Mr", "ron", "john", "ronpass")
+        author_json = author.get_json()
+
+        self.assertDictEqual(
+            author_json, 
+            {
+                "author_id": None,
+                'uwi_id': "817364712",
+                'title': "Mr",
+                'first_name': "ron",
+                'last_name': "john"
+            })
+        
+    def test_admin_get_json(self):
+        admin = Admin("817630671", "admin1", "admin1pass")
+        admin_json = admin.get_json()
+
+        self.assertDictEqual(
+            admin_json,
+            {
+                'id': None,
+                'admin_id' : "817630671",
+                'username': "admin1",
+                'role' : 'admin'
+            })
+
+    def test_publication_get_json(self):
+        pub_date = datetime.now()
+        publication = Publication("978-0-596-52068-7", "Example Paper", pub_date)
+        pub_json = publication.get_json()
+
+        self.assertDictEqual(
+            pub_json,
+            {
+                'publication_id': None,
+                'ISBN': "978-0-596-52068-7",
+                'title': "Example Paper",
+                'publication_date': pub_date.strftime("%Y/%m/%d, %H:%M:%S")
+            })
     
     def test_hashed_password(self):
         password = "mypass"
