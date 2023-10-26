@@ -1,11 +1,10 @@
 import os, tempfile, pytest, logging, unittest
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime, timedelta
-from unittest import mock
+from datetime import datetime
 
 from App.main import create_app
 from App.database import db, create_db
-from App.models import User
+from App.models import User, Author, Admin, Publication, AuthorPublication, RegularUser
 from App.controllers import (
     create_user,
     get_all_users_json,
@@ -30,14 +29,82 @@ LOGGER = logging.getLogger(__name__)
 class UserUnitTests(unittest.TestCase):
 
     def test_new_user(self):
-        user = User("bob", "bobpass")
+        user = RegularUser("bob", "bobpass")
         assert user.username == "bob"
 
+    def test_new_author(self):
+        author = Author("817364712", "Mr", "ron", "john", "ronpass")
+        assert author.uwi_id == "817364712"
+        assert author.title == "Mr"
+        assert author.first_name == "ron"
+        assert author.last_name == "john"
+        # assert author.password == "ronpass"
+        
+    def test_new_admin(self):
+        admin = Admin("817630671", "admin1", "admin1pass")
+        assert admin.admin_id == "817630671"
+        assert admin.username == "admin1"
+        # assert admin.password == "admin1pass"
+
+    def test_new_publication(self):
+        publication = Publication("978-0-596-52068-7", "Example Paper", "01-02-2023")
+        assert publication.isbn == "978-0-596-52068-7"
+        assert publication.title == "Example Paper"
+        assert publication.publication_date == "01-02-2023"
+    
+    def test_new_author_publication(self):
+        author_pub = AuthorPublication("817364712", "pub4")
+        assert author_pub.author_id == "817364712"
+        assert author_pub.publication_id == "pub4"
+
+
     # pure function no side effects or integrations called
-    # def test_get_json(self):
-    #     user = User("bob", "bobpass")
-    #     user_json = user.get_json()
-    #     self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+    def test_user_get_json(self):
+        user = RegularUser("bob", "bobpass")
+        user_json = user.get_json()
+        
+        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+
+    def test_author_get_json(self):
+        author = Author("817364712", "Mr", "ron", "john", "ronpass")
+        author_json = author.get_json()
+
+        self.assertDictEqual(
+            author_json, 
+            {
+                "author_id": None,
+                'uwi_id': "817364712",
+                'title': "Mr",
+                'first_name': "ron",
+                'last_name': "john"
+            })
+        
+    def test_admin_get_json(self):
+        admin = Admin("817630671", "admin1", "admin1pass")
+        admin_json = admin.get_json()
+
+        self.assertDictEqual(
+            admin_json,
+            {
+                'id': None,
+                'admin_id' : "817630671",
+                'username': "admin1",
+                'role' : 'admin'
+            })
+
+    def test_publication_get_json(self):
+        pub_date = datetime.now()
+        publication = Publication("978-0-596-52068-7", "Example Paper", pub_date)
+        pub_json = publication.get_json()
+
+        self.assertDictEqual(
+            pub_json,
+            {
+                'publication_id': None,
+                'ISBN': "978-0-596-52068-7",
+                'title': "Example Paper",
+                'publication_date': pub_date.strftime("%Y/%m/%d, %H:%M:%S")
+            })
     
     def test_hashed_password(self):
         password = "mypass"
@@ -100,27 +167,14 @@ class UsersIntegrationTests(unittest.TestCase):
         publication = create_publication("strid", "pub1", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
         assert publication.title == "Paper on Herbology"
 
-    def test_search_publications_by_publication(self):
+    def test_search_publications(self):
         author = create_author("strid", "4", "Mr.", "jerry", "smith(cowardice)", "cowardly_jerry")
         pub_date = datetime.now()
         pub_date_formatted = pub_date.strftime("%Y/%m/%d, %H:%M:%S")
         publication = create_publication("strid", "pub2", "Paper on Cowardice", pub_date, [author.uwi_id])
         publications, authors = search_publications("Cowardice")
         self.assertListEqual([{"publication_id": publication.publication_id, "ISBN":"pub2", "title":"Paper on Cowardice", "publication_date":pub_date_formatted}], publications)
-        
-
-    def test_search_publications_by_author(self):
-        author = create_author("strid", "14", "Mr.", "joe", "john", "johnny")
-        pub_date = datetime.now()
-        pub_date_formatted = pub_date.strftime("%Y/%m/%d, %H:%M:%S")
-        publication = create_publication("strid", "pub14", "Paper on Stories", pub_date, [author.uwi_id])
-        publications, authors = search_publications("joe")
-        
-        self.assertListEqual([{"author_id":author.id, "uwi_id":"14", "title":"Mr.", "first_name":"joe", "last_name":"john"}], authors)
-        
-    def test_search_publication_no_results(self):
-        publications,authors = search_publications("NULL")
-        
+        self.assertListEqual([{"author_id":author.id, "uwi_id":"4", "title":"Mr.", "first_name":"jerry", "last_name":"smith(cowardice)"}], authors)
 
     def test_get_publications_by_author(self):
         author = create_author("strid", "5", "Ms.", "beth", "smith", "betty")
@@ -132,7 +186,7 @@ class UsersIntegrationTests(unittest.TestCase):
         
         self.assertListEqual([{"publication_id": publication.publication_id, "ISBN":"pub3", "title":"Paper on Who is the Clone Beth?", "publication_date":pub_date_formatted}], publications_json)
 
-    def test_get_valid_publication_tree(self):
+    def test_get_publication_tree(self):
         author1 = create_author("strid", "7", "Mr.", "bird", "person", "bird_man")
         author2 = create_author("strid", "8", "Ms.", "poopy", "butthole", "poopy")
         author3 = create_author("strid", "9", "Mr.", "rick", "prime", "prime_rick")
@@ -216,45 +270,6 @@ class UsersIntegrationTests(unittest.TestCase):
                         }]
         self.assertListEqual(expected_tree1, tree1)
 
-    def test_get_invalid_publication_tree(self):
-        tree2 = get_publication_tree("None")
+        tree2 = get_publication_tree("10")
         self.assertIsNone(tree2)
 
-# Define a fixture function that returns a mock config object
-# @pytest.fixture
-# def mock_config():
-#     # Create a mock config object with some attributes
-#     config = mock.Mock()
-#     config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
-#     config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='sqlite' user='viewer'"
-#     config.SECRET_KEY = "123456789"
-
-#     return config
-
-# # Define a test function that uses the fixture as an argument
-# def test_app(mock_config):
-
-#     app = create_app(mock_config)
-#     assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=1)
-#     assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='sqlite' user='viewer'"
-#     assert app.config['SECRET_KEY'] == "123456789"
-
-
-# Define a fixture function that returns a mock config object
-@pytest.fixture
-def mock_config():
-    # Create a mock config object with some attributes
-    config = mock.Mock()
-    config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
-    config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='xyz' user='portaladmin'"
-    config.SECRET_KEY = "1234567890"
-    # Return the mock config object
-    return config
-
-# Define a test function that uses the fixture as an argument
-def test_app(mock_config):
-    # Use the mock config object in your app logic
-    app = create_app(mock_config)
-    assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=7)
-    assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='xyz' user='portaladmin'"
-    assert app.config['SECRET_KEY'] == "1234567890"

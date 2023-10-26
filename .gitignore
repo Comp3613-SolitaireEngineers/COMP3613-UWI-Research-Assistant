@@ -155,5 +155,3 @@ cython_debug/
 #.idea/
 
 node_modules/
-
-a.out
