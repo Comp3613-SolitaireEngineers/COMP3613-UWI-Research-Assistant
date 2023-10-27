@@ -302,7 +302,7 @@ class UsersIntegrationTests(unittest.TestCase):
         tree2 = get_publication_tree("None")
         self.assertIsNone(tree2)
         
-@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
+@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "false", reason="only run on GitHub Actions - build tests")
 def mock_config():
     # Create a mock config object with the attributes from custom_config
     config = mock.Mock()
@@ -313,7 +313,7 @@ def mock_config():
     return config
 
 # This code is used to prevent the build test on GitHub from failing due to the gitignored custom_config.py file
-@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
+@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "false", reason="only run on GitHub Actions - build tests")
 def test_app():
 
     with mock.patch("App.config", new=mock_config()): # This will replace App.config with mock_config only within this block
