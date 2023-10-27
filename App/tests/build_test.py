@@ -6,7 +6,7 @@ import os, pytest
 from datetime import timedelta
 from unittest import mock
 
-from App.controllers import create_app
+from App.main import create_app
 
 @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
 def test_mock_config():

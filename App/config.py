@@ -6,7 +6,11 @@ from datetime import timedelta
 def load_config():
     config = {'ENV': os.environ.get('ENV', 'DEVELOPMENT')}
     delta = 7
-    if config['ENV'] == "DEVELOPMENT":
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        # running on GitHub Actions
+        from App.tests.build_test import mock_config
+        return mock_config()
+    elif config['ENV'] == "DEVELOPMENT":
         from .custom_config import JWT_ACCESS_TOKEN_EXPIRES, SQLALCHEMY_DATABASE_URI, SECRET_KEY
         config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
         config['SECRET_KEY'] = SECRET_KEY
