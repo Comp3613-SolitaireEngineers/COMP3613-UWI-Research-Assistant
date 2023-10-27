@@ -303,7 +303,7 @@ class UsersIntegrationTests(unittest.TestCase):
         self.assertIsNone(tree2)
         
 @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
-def test_mock_config():
+def mock_config():
     # Create a mock config object with the attributes from custom_config
     config = mock.Mock()
     config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
