@@ -7,9 +7,9 @@ def load_config():
     config = {'ENV': os.environ.get('ENV', 'DEVELOPMENT')}
     delta = 7
     if os.environ.get("GITHUB_ACTIONS") == "true":
-        config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
-        config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='sqlite' user='viewer'"
-        config.SECRET_KEY = "123"
+        config[JWT_ACCESS_TOKEN_EXPIRES] = timedelta(days=1)
+        config[SQLALCHEMY_DATABASE_URI] = "host='localhost' dbname='sqlite' user='viewer'"
+        config[SECRET_KEY] = "123"
         
     elif config['ENV'] == "DEVELOPMENT":
         from .custom_config import JWT_ACCESS_TOKEN_EXPIRES, SQLALCHEMY_DATABASE_URI, SECRET_KEY
