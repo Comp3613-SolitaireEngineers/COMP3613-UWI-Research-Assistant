@@ -8,7 +8,7 @@ def load_config():
     delta = 7
     if os.environ.get("GITHUB_ACTIONS") == "true":
         # running on GitHub Actions
-        from App.tests.build_test import mock_config
+        from App.tests.build_tests import mock_config
         return mock_config()
     elif config['ENV'] == "DEVELOPMENT":
         from .custom_config import JWT_ACCESS_TOKEN_EXPIRES, SQLALCHEMY_DATABASE_URI, SECRET_KEY
