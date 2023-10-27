@@ -94,9 +94,6 @@ class Admin(User):
             # flush the changes to the database session
             db.session.flush() 
 
-            # get the publication_id of the publication object
-            # print(new_publication.publication_id)
-
             # create the author_publication objects with the given author_ids and publication_id
             authors = self.create_author_publication(author_ids, new_publication.publication_id)
 

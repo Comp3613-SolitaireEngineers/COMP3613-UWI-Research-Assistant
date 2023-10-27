@@ -14,7 +14,9 @@ from App.controllers import (
     create_admin,
     search_publications,
     get_publications_by_author,
-    get_publication_tree
+    get_publication_tree,
+    get_all_authors_json,
+    get_all_publications
 )
 
 
@@ -139,20 +141,37 @@ class UsersIntegrationTests(unittest.TestCase):
         assert user.username == "rick"
 
     #related to scope
-    def test_create_admin(self):
+    def test_create_admin_success(self):
         admin = create_admin("strid", "admin1", "admin1pass")
         assert admin.username == "admin1"
+        
+    def test_create_admin_failure(self):
+        admin = create_admin("strid2", "admin2", "admin2pass")
+        admin2 = create_admin("strid2", "admin2", "admin2pass")
+        assert admin2 == None
 
-    def test_create_author(self):
+    def test_create_author_success(self):
         author = create_author("strid", "1", "Mr.", "rick", "sanchez", "tiny_rick")
         assert author.first_name == "rick"
+        
+    def test_create_author_failure(self):
+        author = create_author("strid3", "1", "Mr.", "rick", "sanchez", "tiny_rick") #Incorrect admin ID
+        assert author == None
 
-    def test_create_publication(self):
+    def test_create_publication_success(self):
         author1 = create_author("strid", "2", "Mr.", "morty", "sanchez", "evil_morty")
         author2 = create_author("strid", "3", "Ms.", "summer", "smith", "summer_time")
         pub_date = datetime.now()
         publication = create_publication("strid", "pub1", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
         assert publication.title == "Paper on Herbology"
+        
+    # def test_create_publication_failure(self):
+    #     author1 = create_author("strid", "52", "Mr.", "Luis", "Doe", "evil_luis")
+    #     author2 = create_author("strid", "62", "Ms.", "autumn", "gold", "autumn_time")
+    #     pub_date = datetime.now()
+    #     publication1 = create_publication("strid", "pub1", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
+    #     publication2 = create_publication("strid", "pub1", "Paper on Snow", pub_date, [author1.uwi_id, author2.uwi_id])#ISBN Exists
+    #     assert publication2 == None
 
     def test_search_publications_by_publication(self):
         author = create_author("strid", "4", "Mr.", "jerry", "smith(cowardice)", "cowardly_jerry")
@@ -172,9 +191,13 @@ class UsersIntegrationTests(unittest.TestCase):
         
         self.assertListEqual([{"author_id":author.id, "uwi_id":"14", "title":"Mr.", "first_name":"joe", "last_name":"john"}], authors)
         
-    def test_search_publication_no_results(self):
-        publications,authors = search_publications("NULL")
-        
+    def test_search_publication_no_results_authors(self):
+        publications,authors = search_publications("NULL")       
+        self.assertFalse(authors)
+    
+    def test_search_publication_no_results_publications(self):
+        publications,authors = search_publications("NULL")       
+        self.assertFalse(publications)
 
     def test_get_publications_by_author(self):
         author = create_author("strid", "5", "Ms.", "beth", "smith", "betty")
