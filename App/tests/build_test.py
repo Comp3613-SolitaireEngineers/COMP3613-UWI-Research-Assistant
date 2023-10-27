@@ -9,7 +9,7 @@ from unittest import mock
 from App.controllers import create_app
 
 @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
-def mock_config():
+def test_mock_config():
     # Create a mock config object with the attributes from custom_config
     config = mock.Mock()
     config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
