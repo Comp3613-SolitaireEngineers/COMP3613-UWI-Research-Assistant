@@ -6,10 +6,11 @@ from datetime import timedelta
 def load_config():
     config = {'ENV': os.environ.get('ENV', 'DEVELOPMENT')}
     delta = 7
-    if os.environ.get("GITHUB_ACTIONS") == "true":
-        # running on GitHub Actions
-        from App.tests.build_tests import mock_config
-        return mock_config()
+    if os.environ.get("GITHUB_ACTIONS") == "true": #This code is used to prevent the build test on GitHub from 
+                                                    #failing due to the gitignored custom_config.py file
+        config['SQLALCHEMY_DATABASE_URI'] = "host='localhost' dbname='sqlite' user='viewer'"
+        config['SECRET_KEY'] = "123"
+        delta = 1
     elif config['ENV'] == "DEVELOPMENT":
         from .custom_config import JWT_ACCESS_TOKEN_EXPIRES, SQLALCHEMY_DATABASE_URI, SECRET_KEY
         config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
