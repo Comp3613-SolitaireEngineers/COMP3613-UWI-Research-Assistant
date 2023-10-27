@@ -155,26 +155,26 @@ class UsersIntegrationTests(unittest.TestCase):
         assert author.first_name == "rick"
         
     def test_create_author_failure(self):
-        author = create_author("strid3", "1", "Mr.", "rick", "sanchez", "tiny_rick") #Incorrect admin ID
+        author = create_author("strid3", "2", "Mr.", "rick", "sanchez", "tiny_rick") #Incorrect admin ID
         assert author == None
 
     def test_create_publication_success(self):
-        author1 = create_author("strid", "2", "Mr.", "morty", "sanchez", "evil_morty")
-        author2 = create_author("strid", "3", "Ms.", "summer", "smith", "summer_time")
+        author1 = create_author("strid", "3", "Mr.", "morty", "sanchez", "evil_morty")
+        author2 = create_author("strid", "4", "Ms.", "summer", "smith", "summer_time")
         pub_date = datetime.now()
         publication = create_publication("strid", "pub1", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
         assert publication.title == "Paper on Herbology"
         
-    # def test_create_publication_failure(self):
-    #     author1 = create_author("strid", "52", "Mr.", "Luis", "Doe", "evil_luis")
-    #     author2 = create_author("strid", "62", "Ms.", "autumn", "gold", "autumn_time")
-    #     pub_date = datetime.now()
-    #     publication1 = create_publication("strid", "pub1", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
-    #     publication2 = create_publication("strid", "pub1", "Paper on Snow", pub_date, [author1.uwi_id, author2.uwi_id])#ISBN Exists
-    #     assert publication2 == None
+    def test_create_publication_failure(self):
+        author1 = create_author("strid", "5", "Mr.", "Luis", "Doe", "evil_luis")
+        author2 = create_author("strid", "6", "Ms.", "autumn", "gold", "autumn_time")
+        pub_date = datetime.now()
+        publication1 = create_publication("strid", "pub12", "Paper on Herbology", pub_date, [author1.uwi_id, author2.uwi_id])
+        publication2 = create_publication("strid", "pub12", "Paper on Snow", pub_date, [author1.uwi_id, author2.uwi_id])#ISBN Exists. Unique ISBN needed
+        assert publication2 == None
 
     def test_search_publications_by_publication(self):
-        author = create_author("strid", "4", "Mr.", "jerry", "smith(cowardice)", "cowardly_jerry")
+        author = create_author("strid", "7", "Mr.", "jerry", "smith(cowardice)", "cowardly_jerry")
         pub_date = datetime.now()
         pub_date_formatted = pub_date.strftime("%Y/%m/%d, %H:%M:%S")
         publication = create_publication("strid", "pub2", "Paper on Cowardice", pub_date, [author.uwi_id])
@@ -183,13 +183,13 @@ class UsersIntegrationTests(unittest.TestCase):
         
 
     def test_search_publications_by_author(self):
-        author = create_author("strid", "14", "Mr.", "joe", "john", "johnny")
+        author = create_author("strid", "8", "Mr.", "joe", "john", "johnny")
         pub_date = datetime.now()
         pub_date_formatted = pub_date.strftime("%Y/%m/%d, %H:%M:%S")
         publication = create_publication("strid", "pub14", "Paper on Stories", pub_date, [author.uwi_id])
         publications, authors = search_publications("joe")
         
-        self.assertListEqual([{"author_id":author.id, "uwi_id":"14", "title":"Mr.", "first_name":"joe", "last_name":"john"}], authors)
+        self.assertListEqual([{"author_id":author.id, "uwi_id":"8", "title":"Mr.", "first_name":"joe", "last_name":"john"}], authors)
         
     def test_search_publication_no_results_authors(self):
         publications,authors = search_publications("NULL")       
@@ -199,20 +199,25 @@ class UsersIntegrationTests(unittest.TestCase):
         publications,authors = search_publications("NULL")       
         self.assertFalse(publications)
 
-    def test_get_publications_by_author(self):
-        author = create_author("strid", "5", "Ms.", "beth", "smith", "betty")
+    def test_get_publications_by_author_success(self):
+        author = create_author("strid", "9", "Ms.", "beth", "smith", "betty")
         pub_date = datetime.now()
         pub_date_formatted = pub_date.strftime("%Y/%m/%d, %H:%M:%S")
-        publication = create_publication("strid", "pub3", "Paper on Who is the Clone Beth?", pub_date, ["5", "2"])
-        publications = get_publications_by_author("5")
+        publication = create_publication("strid", "pub3", "Paper on Who is the Clone Beth?", pub_date, ["9", "2"])
+        publications = get_publications_by_author("9")
         publications_json = [pub.get_json() for pub in publications]
         
         self.assertListEqual([{"publication_id": publication.publication_id, "ISBN":"pub3", "title":"Paper on Who is the Clone Beth?", "publication_date":pub_date_formatted}], publications_json)
 
+    def test_get_publications_by_author_failure(self):
+        publications = get_publications_by_author("NULL")
+        
+        self.assertFalse(publications)
+
     def test_get_valid_publication_tree(self):
-        author1 = create_author("strid", "7", "Mr.", "bird", "person", "bird_man")
-        author2 = create_author("strid", "8", "Ms.", "poopy", "butthole", "poopy")
-        author3 = create_author("strid", "9", "Mr.", "rick", "prime", "prime_rick")
+        author1 = create_author("strid", "11", "Mr.", "bird", "person", "bird_man")
+        author2 = create_author("strid", "12", "Ms.", "poopy", "butthole", "poopy")
+        author3 = create_author("strid", "13", "Mr.", "rick", "prime", "prime_rick")
 
         pub_date  = datetime.strptime("29 Sep 2023 10:00", "%d %b %Y %H:%M")
 
@@ -220,7 +225,7 @@ class UsersIntegrationTests(unittest.TestCase):
         publication2 = create_publication("strid", "pub5", "Paper on Rick and Morty: The Vat of Acid", pub_date, [author3.uwi_id, author2.uwi_id])
 
        
-        tree1 = get_publication_tree("7")
+        tree1 = get_publication_tree("11")
         expected_tree1= [{'publication_tree': 
                             {'author_id': author1.uwi_id, 
                              'name': 'Mr. bird person', 
