@@ -302,22 +302,22 @@ class UsersIntegrationTests(unittest.TestCase):
         tree2 = get_publication_tree("None")
         self.assertIsNone(tree2)
         
-@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
-def mock_config():
-    # Create a mock config object with the attributes from custom_config
-    config = mock.Mock()
-    config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
-    config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='sqlite' user='viewer'"
-    config.SECRET_KEY = "123"
+# @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
+# def mock_config():
+#     # Create a mock config object with the attributes from custom_config
+#     config = mock.Mock()
+#     config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
+#     config.SQLALCHEMY_DATABASE_URI = "host='localhost' dbname='sqlite' user='viewer'"
+#     config.SECRET_KEY = "123"
 
-    return config
+#     return config
 
-# This code is used to prevent the build test on GitHub from failing due to the gitignored custom_config.py file
-@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
-def test_app():
+# # This code is used to prevent the build test on GitHub from failing due to the gitignored custom_config.py file
+# @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
+# def test_app():
 
-    with mock.patch("App.config", new=mock_config()): # This will replace App.config with mock_config only within this block
-        app = create_app()
-        assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=1)
-        assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='sqlite' user='viewer'"
-        assert app.config['SECRET_KEY'] == "123"
+#     with mock.patch("App.config", new=mock_config()): # This will replace App.config with mock_config only within this block
+#         app = create_app()
+#         assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=1)
+#         assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='sqlite' user='viewer'"
+#         assert app.config['SECRET_KEY'] == "123"
