@@ -314,9 +314,10 @@ def mock_config():
 
 # This code is used to prevent the build test on GitHub from failing due to the gitignored custom_config.py file
 @pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") != "true", reason="only run on GitHub Actions - build tests")
-def test_app(mock_config):
+@mock.patch("App.config", new=mock_config()) # This will replace App.config with mock_config
+def test_app():
 
-    app = create_app(mock_config)
+    app = create_app()
     assert app.config['JWT_ACCESS_TOKEN_EXPIRES'] == timedelta(days=1)
     assert app.config['SQLALCHEMY_DATABASE_URI'] == "host='localhost' dbname='sqlite' user='viewer'"
     assert app.config['SECRET_KEY'] == "123"
