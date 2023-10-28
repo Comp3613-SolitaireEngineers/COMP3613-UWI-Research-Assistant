@@ -37,13 +37,13 @@ class UserUnitTests(unittest.TestCase):
         assert author.title == "Mr"
         assert author.first_name == "ron"
         assert author.last_name == "john"
-        # assert author.password == "ronpass"
+        
         
     def test_new_admin(self):
         admin = Admin("817630671", "admin1", "admin1pass")
         assert admin.admin_id == "817630671"
         assert admin.username == "admin1"
-        # assert admin.password == "admin1pass"
+        
 
     def test_new_publication(self):
         publication = Publication("978-0-596-52068-7", "Example Paper", "01-02-2023")
