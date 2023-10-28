@@ -36,8 +36,6 @@ class Admin(User):
             print('Error creating Author: ', e)
             db.session.rollback()
             return None
-        
-    import logging
 
     def create_author_publication(self, author_ids, publication_id):  
         if not publication_id: 
@@ -57,31 +55,7 @@ class Admin(User):
         except Exception as e:
             # log the error
             print(e)
-            return None
-
-        
-    # def create_publication(self, title, publication_date, author_ids):
-    #     try:
-    #         valid_author_ids = [author_id for author_id in author_ids if Author.query.filter_by(uwi_id=author_id).first()]
-            
-    #         if len(valid_author_ids) != len(author_ids):
-    #             # There is atleast one invalid author in the list
-    #             return False
-    #         else:
-    #             # All authors in author_ids are valid
-    #             new_publication = Publication(title=title, publication_date=publication_date)
-    #             author_pubs = self.create_author_publication(author_ids=author_ids, publication_id=new_publication.publication_id)
-    #             db.session.add(new_publication)
-    #             db.session.commit() # https://stackoverflow.com/questions/19388555/sqlalchemy-session-add-return-value
-
-    #             # print(new_publication.id)
-
-    #             return new_publication
-            
-    #     except Exception as e:
-    #         print(e)
-    #         return None
-    
+            return None 
 
     def create_publication(self, isbn, title, publication_date, author_ids):
         try:
@@ -93,13 +67,9 @@ class Admin(User):
 
             # flush the changes to the database session
             db.session.flush() 
-
-            # get the publication_id of the publication object
-            # print(new_publication.publication_id)
-
             # create the author_publication objects with the given author_ids and publication_id
             authors = self.create_author_publication(author_ids, new_publication.publication_id)
-
+ 
             for author_id in author_ids:
                 # get the author object by uwi_id
                 author = Author.query.filter_by(uwi_id = author_id).first()
@@ -115,5 +85,6 @@ class Admin(User):
             return new_publication
                 
         except Exception as e:
+            db.session.rollback()
             print(e)
             return None

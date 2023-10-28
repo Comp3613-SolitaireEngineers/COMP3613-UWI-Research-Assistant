@@ -3,8 +3,6 @@ from .author import get_author
 from App.database import db
 from sqlalchemy import or_, TEXT
 
-
-
 def create_publication(admin_id, isbn, title, publication_date, author_ids):
     admin = Admin.query.filter_by(admin_id = admin_id).first()
 
